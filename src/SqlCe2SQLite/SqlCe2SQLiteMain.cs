@@ -25,6 +25,11 @@ namespace SqlCe2SQLite
             this.textBoxAction.Dock = DockStyle.Fill;
             this.textBoxTestNRecords.Text = "50";
 
+            this.Text = "SqlCe2SQLite";
+#if DEBUG
+            this.Text += "   ***DEBUG***";
+#endif
+
 #if DEBUG
             this.textBoxSqlCe.Text = @"C:\temp\KaJour\Prod\Prod2\KAJOUR4.sdf";
             this.textBoxSQLite.Text = @"C:\temp\KaJour\Prod\Prod2\KAJOUR4.db3";
