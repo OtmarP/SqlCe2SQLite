@@ -39,6 +39,7 @@ namespace SqlCe2SQLite
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
+            // Do.04.03.2021 22:15:33 -op- v:2021.03.04
             // Do.04.03.2021 18:42:29 -op- CopyData, mit TestNRecords
             // Mi.03.03.2021 12:30:45 -op- NuGet (Sqlite, SqlCe), DispStaus, DelTarget
             // Di.02.03.2021 17:30:00 -op- Cr. (4.7.1)
