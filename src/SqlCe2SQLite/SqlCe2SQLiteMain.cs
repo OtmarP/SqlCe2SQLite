@@ -25,7 +25,7 @@ namespace SqlCe2SQLite
             this.textBoxAction.Dock = DockStyle.Fill;
             this.textBoxTestNRecords.Text = "50";
 
-            this.Text = "SqlCe2SQLite";
+            this.Text = "SqlCe2SQLite v:2021.03.04";
 #if DEBUG
             this.Text += "   ***DEBUG***";
 #endif
