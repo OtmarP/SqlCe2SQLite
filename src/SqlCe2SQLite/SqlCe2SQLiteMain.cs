@@ -20,8 +20,10 @@ namespace SqlCe2SQLite
             this.Left = 50;
 
             this.toolStripStatusLabel1.Text = "";
+            this.toolStripStatusLabel2.Text = "";
             this.toolStripProgressBarTable.Value = 0;
             this.textBoxAction.Dock = DockStyle.Fill;
+            this.textBoxTestNRecords.Text = "50";
 
 #if DEBUG
             this.textBoxSqlCe.Text = @"C:\temp\KaJour\Prod\Prod2\KAJOUR4.sdf";
@@ -32,6 +34,7 @@ namespace SqlCe2SQLite
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
+            // Do.04.03.2021 18:42:29 -op- CopyData, mit TestNRecords
             // Mi.03.03.2021 12:30:45 -op- NuGet (Sqlite, SqlCe), DispStaus, DelTarget
             // Di.02.03.2021 17:30:00 -op- Cr. (4.7.1)
             //---------------------------------
@@ -221,6 +224,8 @@ namespace SqlCe2SQLite
             this.toolStripProgressBarTable.Value = 0;
             Application.DoEvents();
 
+            DateTime dtStart = DateTime.Now;
+
             StringBuilder sb = new StringBuilder();
 
             //
@@ -230,49 +235,107 @@ namespace SqlCe2SQLite
             KaJourDAL.KaJour_Global_LITE.SQLProvider = "SQLITE";
             KaJourDAL.KaJour_Global_LITE.SQLConnStr = "Data Source='" + this.textBoxSQLite.Text + "'";
 
+            bool error = false;
+
+            bool testNRecords = this.checkBoxTestNRecords.Checked;
+            int testNRecordCount = -1;
+            try
+            {
+                testNRecordCount = Convert.ToInt32(this.textBoxTestNRecords.Text);
+            }
+            catch (Exception)
+            {
+            }
+
             // ##############################################
             sb.AppendLine(KaJourDAL.KaJour_Global_CE.SQLProvider + ":");
+
+            var sqLITE = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_LITE.SQLProvider, KaJourDAL.KaJour_Global_LITE.SQLConnStr);
+            sqLITE.Connect();
+            sqLITE.DisConnect();
 
             var sqlCe = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_CE.SQLProvider, KaJourDAL.KaJour_Global_CE.SQLConnStr);
             sqlCe.Connect();
             DataTable tablesCE = sqlCe.GetTableList("", false);
             sqlCe.DisConnect();
-            for (int iTable = 0; iTable < tablesCE.Rows.Count; iTable++){
-                this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesCE.Rows.Count;
-                Application.DoEvents();
-
+            for (int iTable = 0; iTable < tablesCE.Rows.Count; iTable++)
+            {
                 var tableName = tablesCE.Rows[iTable][0].ToString();
                 sqlCe.Connect();
                 var tableRec1 = sqlCe.GetTableRecCount(tableName);
                 sqlCe.DisConnect();
 
+                this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesCE.Rows.Count;
+                this.toolStripStatusLabel2.Text = " " + (iTable + 1).ToString() + "/" + tablesCE.Rows.Count.ToString() + " " + tableName + " 0/" + tableRec1.ToString() + " ";
+                Application.DoEvents();
+
                 sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
+
+                // delete SQLite
+                var del = sqLITE.DeleteBuilder(tableName);
+                var retDel = sqLITE.ExecuteNonQuery("DELETE", del);
 
                 var tableSelect = sqlCe.Execute("SELECT", "SELECT * FROM " + tableName);
                 for (int iRow = 0; iRow < tableSelect.Rows.Count; iRow++)
                 {
+                    // Test
+                    if (testNRecords)
+                    {
+                        if (testNRecordCount > 0)
+                        {
+                            if (iRow >= testNRecordCount)
+                            {
+                                break;  //=================>
+                            }
+                        }
+                    }
+
                     var par = sqlCe.InitParameterList();
+                    string sqlFieldList = "";
+                    string sqlValueList = "";
                     for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
                     {
                         var colVal = tableSelect.Rows[iRow][iCol];
                         var colName = tableSelect.Columns[iCol].ColumnName;
                         par.Add(colName, colVal);
+                        // (Fld1) values (@Fld1)
+                        if (sqlFieldList != "") { sqlFieldList += ","; }
+                        sqlFieldList += " " + colName;
+
+                        if (sqlValueList != "") { sqlValueList += ","; }
+                        sqlValueList += " @" + colName;
                     }
 
-                    //// insert into SQLite
-                    //var sqlLITE = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_LITE.SQLProvider, KaJourDAL.KaJour_Global_LITE.SQLConnStr);
-                    ////string sqlIns = "INSERT ";
-                    //var ins = sqlLITE.InsertBuilder(tableName);
+                    // insert into SQLite
+                    //var sqLITE = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_LITE.SQLProvider, KaJourDAL.KaJour_Global_LITE.SQLConnStr);
+                    string sqlIns = sqLITE.InsertBuilder(tableName);    // "insert into Table"
+                    // (Fld1) values (@Fld1)
+                    sqlIns += " (" + sqlFieldList + ") VALUES (" + sqlValueList + ")";
+                    var retIns = sqLITE.ExecuteNonQuery("INSERT", sqlIns, par);
+                    var exc = sqLITE.GetException();
+                    if (exc != null) {
+                        MessageBox.Show("Error:" + exc.Message);
+                        sb.AppendLine("--------------------");
+                        sb.AppendLine("Error:" + exc.Message);
+                        sb.AppendLine("--------------------");
 
-                    //string sqlIns = " set Fld1=@Val1";
+                        error = true;
+                        break;  //=================>
+                    }
 
+                    
                 }
-
+                if (error) {
+                    break;  //=================>
+                }
             }
             sb.AppendLine("  Count: " + tablesCE.Rows.Count.ToString());
 
+            DateTime dtEnde = DateTime.Now;
+
             this.textBoxAction.Text = sb.ToString();
             this.toolStripProgressBarTable.Value = 100;
+            this.toolStripStatusLabel2.Text = " Fertig: " + dtStart.ToString("HH:mm:ss") + " - " + dtEnde.ToString("HH:mm:ss");
 
             return ret;
         }

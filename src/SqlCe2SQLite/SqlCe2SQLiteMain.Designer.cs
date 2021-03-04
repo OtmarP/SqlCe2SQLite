@@ -29,24 +29,29 @@
         private void InitializeComponent()
         {
             this.panelTop = new System.Windows.Forms.Panel();
+            this.buttonDelTarget = new System.Windows.Forms.Button();
+            this.buttonStatus = new System.Windows.Forms.Button();
+            this.buttonCopy = new System.Windows.Forms.Button();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.textBoxSQLite = new System.Windows.Forms.TextBox();
+            this.textBoxSqlCe = new System.Windows.Forms.TextBox();
+            this.buttonExit = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBarTable = new System.Windows.Forms.ToolStripProgressBar();
-            this.buttonExit = new System.Windows.Forms.Button();
-            this.textBoxSqlCe = new System.Windows.Forms.TextBox();
-            this.textBoxSQLite = new System.Windows.Forms.TextBox();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.buttonCopy = new System.Windows.Forms.Button();
             this.textBoxAction = new System.Windows.Forms.TextBox();
-            this.buttonStatus = new System.Windows.Forms.Button();
-            this.buttonDelTarget = new System.Windows.Forms.Button();
+            this.textBoxTestNRecords = new System.Windows.Forms.TextBox();
+            this.checkBoxTestNRecords = new System.Windows.Forms.CheckBox();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.panelTop.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTop
             // 
+            this.panelTop.Controls.Add(this.checkBoxTestNRecords);
+            this.panelTop.Controls.Add(this.textBoxTestNRecords);
             this.panelTop.Controls.Add(this.buttonDelTarget);
             this.panelTop.Controls.Add(this.buttonStatus);
             this.panelTop.Controls.Add(this.buttonCopy);
@@ -61,11 +66,88 @@
             this.panelTop.Size = new System.Drawing.Size(735, 65);
             this.panelTop.TabIndex = 0;
             // 
+            // buttonDelTarget
+            // 
+            this.buttonDelTarget.Location = new System.Drawing.Point(84, 31);
+            this.buttonDelTarget.Name = "buttonDelTarget";
+            this.buttonDelTarget.Size = new System.Drawing.Size(75, 23);
+            this.buttonDelTarget.TabIndex = 8;
+            this.buttonDelTarget.Text = "Del Target";
+            this.buttonDelTarget.UseVisualStyleBackColor = true;
+            this.buttonDelTarget.Click += new System.EventHandler(this.buttonDelTarget_Click);
+            // 
+            // buttonStatus
+            // 
+            this.buttonStatus.Location = new System.Drawing.Point(3, 31);
+            this.buttonStatus.Name = "buttonStatus";
+            this.buttonStatus.Size = new System.Drawing.Size(75, 23);
+            this.buttonStatus.TabIndex = 7;
+            this.buttonStatus.Text = "Status";
+            this.buttonStatus.UseVisualStyleBackColor = true;
+            this.buttonStatus.Click += new System.EventHandler(this.buttonStatus_Click);
+            // 
+            // buttonCopy
+            // 
+            this.buttonCopy.Location = new System.Drawing.Point(357, 3);
+            this.buttonCopy.Name = "buttonCopy";
+            this.buttonCopy.Size = new System.Drawing.Size(75, 23);
+            this.buttonCopy.TabIndex = 6;
+            this.buttonCopy.Text = "Copy";
+            this.buttonCopy.UseVisualStyleBackColor = true;
+            this.buttonCopy.Click += new System.EventHandler(this.buttonCopy_Click);
+            // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(438, 8);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(39, 13);
+            this.linkLabel2.TabIndex = 5;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "SQLite";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(93, 8);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(35, 13);
+            this.linkLabel1.TabIndex = 4;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "SqlCe";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // textBoxSQLite
+            // 
+            this.textBoxSQLite.Location = new System.Drawing.Point(483, 5);
+            this.textBoxSQLite.Name = "textBoxSQLite";
+            this.textBoxSQLite.Size = new System.Drawing.Size(218, 20);
+            this.textBoxSQLite.TabIndex = 2;
+            // 
+            // textBoxSqlCe
+            // 
+            this.textBoxSqlCe.Location = new System.Drawing.Point(134, 5);
+            this.textBoxSqlCe.Name = "textBoxSqlCe";
+            this.textBoxSqlCe.Size = new System.Drawing.Size(218, 20);
+            this.textBoxSqlCe.TabIndex = 1;
+            // 
+            // buttonExit
+            // 
+            this.buttonExit.Location = new System.Drawing.Point(3, 3);
+            this.buttonExit.Name = "buttonExit";
+            this.buttonExit.Size = new System.Drawing.Size(75, 23);
+            this.buttonExit.TabIndex = 0;
+            this.buttonExit.Text = "Exit";
+            this.buttonExit.UseVisualStyleBackColor = true;
+            this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
-            this.toolStripProgressBarTable});
+            this.toolStripProgressBarTable,
+            this.toolStripStatusLabel2});
             this.statusStrip1.Location = new System.Drawing.Point(0, 398);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(735, 22);
@@ -84,62 +166,6 @@
             this.toolStripProgressBarTable.Size = new System.Drawing.Size(100, 16);
             this.toolStripProgressBarTable.Value = 50;
             // 
-            // buttonExit
-            // 
-            this.buttonExit.Location = new System.Drawing.Point(3, 3);
-            this.buttonExit.Name = "buttonExit";
-            this.buttonExit.Size = new System.Drawing.Size(75, 23);
-            this.buttonExit.TabIndex = 0;
-            this.buttonExit.Text = "Exit";
-            this.buttonExit.UseVisualStyleBackColor = true;
-            this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
-            // 
-            // textBoxSqlCe
-            // 
-            this.textBoxSqlCe.Location = new System.Drawing.Point(134, 5);
-            this.textBoxSqlCe.Name = "textBoxSqlCe";
-            this.textBoxSqlCe.Size = new System.Drawing.Size(218, 20);
-            this.textBoxSqlCe.TabIndex = 1;
-            // 
-            // textBoxSQLite
-            // 
-            this.textBoxSQLite.Location = new System.Drawing.Point(483, 5);
-            this.textBoxSQLite.Name = "textBoxSQLite";
-            this.textBoxSQLite.Size = new System.Drawing.Size(218, 20);
-            this.textBoxSQLite.TabIndex = 2;
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(93, 8);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(35, 13);
-            this.linkLabel1.TabIndex = 4;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "SqlCe";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
-            // linkLabel2
-            // 
-            this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(438, 8);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(39, 13);
-            this.linkLabel2.TabIndex = 5;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "SQLite";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
-            // 
-            // buttonCopy
-            // 
-            this.buttonCopy.Location = new System.Drawing.Point(357, 3);
-            this.buttonCopy.Name = "buttonCopy";
-            this.buttonCopy.Size = new System.Drawing.Size(75, 23);
-            this.buttonCopy.TabIndex = 6;
-            this.buttonCopy.Text = "Copy";
-            this.buttonCopy.UseVisualStyleBackColor = true;
-            this.buttonCopy.Click += new System.EventHandler(this.buttonCopy_Click);
-            // 
             // textBoxAction
             // 
             this.textBoxAction.Location = new System.Drawing.Point(12, 89);
@@ -149,25 +175,28 @@
             this.textBoxAction.Size = new System.Drawing.Size(478, 287);
             this.textBoxAction.TabIndex = 2;
             // 
-            // buttonStatus
+            // textBoxTestNRecords
             // 
-            this.buttonStatus.Location = new System.Drawing.Point(3, 31);
-            this.buttonStatus.Name = "buttonStatus";
-            this.buttonStatus.Size = new System.Drawing.Size(75, 23);
-            this.buttonStatus.TabIndex = 7;
-            this.buttonStatus.Text = "Status";
-            this.buttonStatus.UseVisualStyleBackColor = true;
-            this.buttonStatus.Click += new System.EventHandler(this.buttonStatus_Click);
+            this.textBoxTestNRecords.Location = new System.Drawing.Point(449, 33);
+            this.textBoxTestNRecords.Name = "textBoxTestNRecords";
+            this.textBoxTestNRecords.Size = new System.Drawing.Size(41, 20);
+            this.textBoxTestNRecords.TabIndex = 9;
             // 
-            // buttonDelTarget
+            // checkBoxTestNRecords
             // 
-            this.buttonDelTarget.Location = new System.Drawing.Point(84, 31);
-            this.buttonDelTarget.Name = "buttonDelTarget";
-            this.buttonDelTarget.Size = new System.Drawing.Size(75, 23);
-            this.buttonDelTarget.TabIndex = 8;
-            this.buttonDelTarget.Text = "Del Target";
-            this.buttonDelTarget.UseVisualStyleBackColor = true;
-            this.buttonDelTarget.Click += new System.EventHandler(this.buttonDelTarget_Click);
+            this.checkBoxTestNRecords.AutoSize = true;
+            this.checkBoxTestNRecords.Location = new System.Drawing.Point(344, 35);
+            this.checkBoxTestNRecords.Name = "checkBoxTestNRecords";
+            this.checkBoxTestNRecords.Size = new System.Drawing.Size(99, 17);
+            this.checkBoxTestNRecords.TabIndex = 11;
+            this.checkBoxTestNRecords.Text = "Test n Records";
+            this.checkBoxTestNRecords.UseVisualStyleBackColor = true;
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(118, 17);
+            this.toolStripStatusLabel2.Text = "toolStripStatusLabel2";
             // 
             // SqlCe2SQLiteMain
             // 
@@ -204,6 +233,9 @@
         private System.Windows.Forms.TextBox textBoxAction;
         private System.Windows.Forms.Button buttonDelTarget;
         private System.Windows.Forms.Button buttonStatus;
+        private System.Windows.Forms.TextBox textBoxTestNRecords;
+        private System.Windows.Forms.CheckBox checkBoxTestNRecords;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
     }
 }
 
