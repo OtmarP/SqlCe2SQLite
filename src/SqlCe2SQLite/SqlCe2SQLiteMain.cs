@@ -39,7 +39,7 @@ namespace SqlCe2SQLite
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
-            // So.07.03.2021 17:52:39 -op-
+            // So.07.03.2021 17:52:39 -op- Errorhandling verbessert
             //                              Count: Tables: 22, Rows: 83935, Rec/Sec: 36,375030792145
             //                              Duration: 16:20:49 - 16:59:17 -> 00:38:27.4894556
             // So.07.03.2021 16:15:03 -op- Display Statistics (Tables, Rows, Rec/Sec, Duration) #1
@@ -113,6 +113,9 @@ namespace SqlCe2SQLite
             this.toolStripProgressBarTable.Value = 0;
             Application.DoEvents();
 
+            int countTables = 0;
+            int countRows = 0;
+
             StringBuilder sb = new StringBuilder();
 
             // 1. Check Databases
@@ -132,49 +135,78 @@ namespace SqlCe2SQLite
             sb.AppendLine(KaJourDAL.KaJour_Global_CE.SQLProvider+":");
 
             var sqlCe = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_CE.SQLProvider, KaJourDAL.KaJour_Global_CE.SQLConnStr);
-            sqlCe.Connect();
-            DataTable tablesCE = sqlCe.GetTableList("", false);
-            sqlCe.DisConnect();
-            for (int iTable = 0; iTable < tablesCE.Rows.Count; iTable++)
+            DataTable tablesCE = null;
+            try
             {
-                // 0 / 6 ... 0
-                // 1 / 6 ...
-                // 2 / 6 ...
-                // 3 / 6 ... 50
-                // 4 / 6 ...
-                // 5 / 6 ...
-                // 6 / 6 ... 100
-                this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesCE.Rows.Count;
-                Application.DoEvents();
-
-                var tableName = tablesCE.Rows[iTable][0].ToString();
                 sqlCe.Connect();
-                var tableRec1 = sqlCe.GetTableRecCount(tableName);
+                tablesCE = sqlCe.GetTableList("", false);
                 sqlCe.DisConnect();
-
-                sb.AppendLine("  "+tableName + "   Rec:" + tableRec1.ToString());
             }
-            sb.AppendLine("  Count: " + tablesCE.Rows.Count.ToString());
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                return ret;
+            }
+            if (tablesCE != null)
+            {
+                for (int iTable = 0; iTable < tablesCE.Rows.Count; iTable++)
+                {
+                    countTables++;
+
+                    var tableName = tablesCE.Rows[iTable][0].ToString();
+                    sqlCe.Connect();
+                    var tableRec1 = sqlCe.GetTableRecCount(tableName);
+                    sqlCe.DisConnect();
+
+                    countRows += tableRec1;
+
+                    this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesCE.Rows.Count;
+                    Application.DoEvents();
+
+                    sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
+                }
+            }
+            sb.AppendLine("   Count: Tables: " + countTables.ToString() + ", Rows: " + countRows.ToString());
+
+            countTables = 0;
+            countRows = 0;
 
             // ##############################################
             sb.AppendLine(KaJourDAL.KaJour_Global_LITE.SQLProvider + ":");
 
             var sqLITE = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_LITE.SQLProvider, KaJourDAL.KaJour_Global_LITE.SQLConnStr);
-            sqLITE.Connect();
-            DataTable tablesLITE = sqLITE.GetTableList("", false);
-            sqLITE.DisConnect();
-            for (int iTable = 0; iTable < tablesLITE.Rows.Count; iTable++){
-                this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesLITE.Rows.Count;
-                Application.DoEvents();
-
-                var tableName = tablesLITE.Rows[iTable][0].ToString();
+            DataTable tablesLITE = null;
+            try
+            {
                 sqLITE.Connect();
-                var tableRec1 = sqLITE.GetTableRecCount(tableName);
+                tablesLITE = sqLITE.GetTableList("", false);
                 sqLITE.DisConnect();
-
-                sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
             }
-            sb.AppendLine("  Count: " + tablesLITE.Rows.Count.ToString());
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                return ret;
+            }
+            if (tablesLITE != null)
+            {
+                for (int iTable = 0; iTable < tablesLITE.Rows.Count; iTable++)
+                {
+                    countTables++;
+
+                    var tableName = tablesLITE.Rows[iTable][0].ToString();
+                    sqLITE.Connect();
+                    var tableRec1 = sqLITE.GetTableRecCount(tableName);
+                    sqLITE.DisConnect();
+
+                    countRows += tableRec1;
+
+                    this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesLITE.Rows.Count;
+                    Application.DoEvents();
+
+                    sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
+                }
+            }
+            sb.AppendLine("  Count: Tables: " + countTables.ToString() + ", Rows: " + countRows.ToString());
 
             this.textBoxAction.Text = sb.ToString();
             this.toolStripProgressBarTable.Value = 100;
@@ -189,6 +221,9 @@ namespace SqlCe2SQLite
             this.toolStripProgressBarTable.Value = 0;
             Application.DoEvents();
 
+            int countTables = 0;
+            int countRows = 0;
+
             StringBuilder sb = new StringBuilder();
 
             KaJourDAL.KaJour_Global_LITE.SQLProvider = "SQLITE";
@@ -196,30 +231,48 @@ namespace SqlCe2SQLite
 
             // ##############################################
             sb.AppendLine(KaJourDAL.KaJour_Global_LITE.SQLProvider + ":");
+
             var sqLITE = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_LITE.SQLProvider, KaJourDAL.KaJour_Global_LITE.SQLConnStr);
-            sqLITE.Connect();
-            DataTable tablesLITE = sqLITE.GetTableList("", false);
-            sqLITE.DisConnect();
-            for (int iTable = 0; iTable < tablesLITE.Rows.Count; iTable++){
-                this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesLITE.Rows.Count;
-                Application.DoEvents();
-
-                var tableName = tablesLITE.Rows[iTable][0].ToString();
+            DataTable tablesLITE = null;
+            try
+            {
                 sqLITE.Connect();
-                var tableRec1 = sqLITE.GetTableRecCount(tableName);
+                tablesLITE = sqLITE.GetTableList("", false);
                 sqLITE.DisConnect();
-
-                // Delete
-                var del = sqLITE.DeleteBuilder(tableName);
-                var retDel = sqLITE.ExecuteNonQuery("DELETE", del);
-
-                sqLITE.Connect();
-                var tableRec2 = sqLITE.GetTableRecCount(tableName);
-                sqLITE.DisConnect();
-
-                sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString()+ "   Del:" + retDel.ToString() + "   Rec:" + tableRec2.ToString());
             }
-            sb.AppendLine("  Count: " + tablesLITE.Rows.Count.ToString());
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                return ret;
+            }
+            if (tablesLITE != null)
+            {
+                for (int iTable = 0; iTable < tablesLITE.Rows.Count; iTable++)
+                {
+                    countTables++;
+
+                    this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesLITE.Rows.Count;
+                    Application.DoEvents();
+
+                    var tableName = tablesLITE.Rows[iTable][0].ToString();
+                    sqLITE.Connect();
+                    var tableRec1 = sqLITE.GetTableRecCount(tableName);
+                    sqLITE.DisConnect();
+
+                    countRows += tableRec1;
+
+                    // Delete
+                    var del = sqLITE.DeleteBuilder(tableName);
+                    var retDel = sqLITE.ExecuteNonQuery("DELETE", del);
+
+                    sqLITE.Connect();
+                    var tableRec2 = sqLITE.GetTableRecCount(tableName);
+                    sqLITE.DisConnect();
+
+                    sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString() + "   Del:" + retDel.ToString() + "   Rec:" + tableRec2.ToString());
+                }
+            }
+            sb.AppendLine("  Count: Tables: " + countTables.ToString()+ ", Rows: " + countRows.ToString());
 
             this.textBoxAction.Text = sb.ToString();
             this.toolStripProgressBarTable.Value = 100;
