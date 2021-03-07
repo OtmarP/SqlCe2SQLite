@@ -232,6 +232,9 @@ namespace SqlCe2SQLite
 
             DateTime dtStart = DateTime.Now;
 
+            int countTables = 0;
+            int countRows = 0;
+
             StringBuilder sb = new StringBuilder();
 
             //
@@ -266,6 +269,8 @@ namespace SqlCe2SQLite
             sqlCe.DisConnect();
             for (int iTable = 0; iTable < tablesCE.Rows.Count; iTable++)
             {
+                countTables++;
+
                 var tableName = tablesCE.Rows[iTable][0].ToString();
                 sqlCe.Connect();
                 var tableRec1 = sqlCe.GetTableRecCount(tableName);
@@ -284,6 +289,8 @@ namespace SqlCe2SQLite
                 var tableSelect = sqlCe.Execute("SELECT", "SELECT * FROM " + tableName);
                 for (int iRow = 0; iRow < tableSelect.Rows.Count; iRow++)
                 {
+                    countRows++;
+
                     this.toolStripStatusLabel2.Text = " " + (iTable + 1).ToString() + "/" + tablesCE.Rows.Count.ToString() + " " + tableName + " " + (iRow + 1).ToString() + "/" + tableRec1.ToString() + " ";
                     // 1,2,3,4,5,6,7,8,9,10
                     // - 20,30,40,50,60,70,80,90,100
@@ -382,13 +389,19 @@ namespace SqlCe2SQLite
                     break;  //=================>
                 }
             }
-            sb.AppendLine("  Count: " + tablesCE.Rows.Count.ToString());
+
+            this.toolStripProgressBarTable.Value = 100;
 
             DateTime dtEnde = DateTime.Now;
 
+            TimeSpan ts = dtEnde - dtStart;
+            string timings = "Duration: " + dtStart.ToString("HH:mm:ss") + " - " + dtEnde.ToString("HH:mm:ss") + " -> " + ts.ToString();
+            double RecPerSec = countRows / ts.TotalSeconds;
+            sb.AppendLine("Count: Tables: " + countTables.ToString() + ", Rows: " + countRows.ToString() + ", Rec/Sec: " + RecPerSec.ToString());
+            sb.AppendLine("" + timings);
             this.textBoxAction.Text = sb.ToString();
-            this.toolStripProgressBarTable.Value = 100;
-            this.toolStripStatusLabel2.Text = " Fertig: " + dtStart.ToString("HH:mm:ss") + " - " + dtEnde.ToString("HH:mm:ss");
+
+            this.toolStripStatusLabel2.Text = " Fertig: " + timings;
 
             return ret;
         }
