@@ -39,6 +39,10 @@ namespace SqlCe2SQLite
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
+            //                              Count: Tables: 22, Rows: 83935, Rec/Sec: 36,375030792145
+            //                              Duration: 16:20:49 - 16:59:17 -> 00:38:27.4894556
+            // So.07.03.2021 16:15:03 -op- Display Statistics (Tables, Rows, Rec/Sec, Duration) #1
+            // So.07.03.2021 15:13:30 -op- Display Record# with modulo
             // Do.04.03.2021 22:15:33 -op- v:2021.03.04
             // Do.04.03.2021 18:42:29 -op- CopyData, mit TestNRecords
             // Mi.03.03.2021 12:30:45 -op- NuGet (Sqlite, SqlCe), DispStaus, DelTarget
