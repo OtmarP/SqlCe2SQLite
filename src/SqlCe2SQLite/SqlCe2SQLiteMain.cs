@@ -39,7 +39,7 @@ namespace SqlCe2SQLite
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
-            // So.07.03.2021 17:52:39 -op- Errorhandling verbessert
+            // So.07.03.2021 17:52:39 -op- Errorhandling verbessert #2
             //                              Count: Tables: 22, Rows: 83935, Rec/Sec: 36,375030792145
             //                              Duration: 16:20:49 - 16:59:17 -> 00:38:27.4894556
             // So.07.03.2021 16:15:03 -op- Display Statistics (Tables, Rows, Rec/Sec, Duration) #1
@@ -59,12 +59,27 @@ namespace SqlCe2SQLite
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MessageBox.Show("not implemented");
+            // .sdf
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.FileName = this.textBoxSqlCe.Text;
+            fileDialog.Filter = "sdf files (*.sdf)|*.sdf|All files (*.*)|*.*";
+            var ret = fileDialog.ShowDialog();
+            if (ret == DialogResult.OK) {
+                this.textBoxSqlCe.Text = fileDialog.FileName;
+            }
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MessageBox.Show("not implemented");
+            // .db3
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.FileName = this.textBoxSQLite.Text;
+            fileDialog.Filter = "db3 files (*.db3)|*.db3|All files (*.*)|*.*";
+            var ret = fileDialog.ShowDialog();
+            if (ret == DialogResult.OK)
+            {
+                this.textBoxSQLite.Text = fileDialog.FileName;
+            }
         }
 
         private void buttonCopy_Click(object sender, EventArgs e)
