@@ -41,12 +41,14 @@ namespace SqlCe2SQLite
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
+            //                             V2: Count: Tables: 22, Rows: 83935, Rec/Sec: 6044,44276733292 (Microsoft Surface Book)
+            //                                 Duration: 16:18:09 - 16:18:23 -> 00:00:13.8863090
             // Mo.08.03.2021 11:44:48 -op- Performance mit Bulk insert (V2)
             // Mo.08.03.2021 11:43:29 -op- Display Data (1 Table, max. 20 Rows)
             // So.07.03.2021 18:37:39 -op- Open File-Dialog für .sdf und .db3 #3
             // So.07.03.2021 17:52:39 -op- Errorhandling verbessert #2
-            //                              Count: Tables: 22, Rows: 83935, Rec/Sec: 36,375030792145 (MS Surface Book)
-            //                              Duration: 16:20:49 - 16:59:17 -> 00:38:27.4894556
+            //                             V1: Count: Tables: 22, Rows: 83935, Rec/Sec: 36,375030792145 (Microsoft Surface Book)
+            //                                 Duration: 16:20:49 - 16:59:17 -> 00:38:27.4894556
             // So.07.03.2021 16:15:03 -op- Display Statistics (Tables, Rows, Rec/Sec, Duration) #1
             // So.07.03.2021 15:13:30 -op- Display Record# with modulo
             // Do.04.03.2021 22:15:33 -op- v:2021.03.04
