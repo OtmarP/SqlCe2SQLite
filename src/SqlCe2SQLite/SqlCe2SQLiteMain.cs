@@ -23,7 +23,9 @@ namespace SqlCe2SQLite
             this.toolStripStatusLabel2.Text = "";
             this.toolStripProgressBarTable.Value = 0;
             this.textBoxAction.Dock = DockStyle.Fill;
+            this.checkBoxTestNRecords.Checked = true;
             this.textBoxTestNRecords.Text = "50";
+            this.checkBoxBulkInsert.Checked = true;
 
             this.Text = "SqlCe2SQLite v:2021.03.04";
 #if DEBUG
@@ -91,7 +93,13 @@ namespace SqlCe2SQLite
             // Copy
             this.DisableEnabledControls(false);
 
-            var ret = this.CopyData();
+            if (this.checkBoxBulkInsert.Checked)
+            {
+                var ret = this.CopyDataV2();
+            }
+            else {
+                var ret = this.CopyData();
+            }
 
             this.DisableEnabledControls(true);
         }
@@ -400,16 +408,205 @@ namespace SqlCe2SQLite
 
             bool ret = false;
 
-            // using (var transaction = connection.BeginTransaction())
-            // var command = connection.CreateCommand();
-            // command.CommandText = "INSERT INTO data VALUES ($value)"
-            // var parameter = command.CreateParameter();
-            // parameter.ParameterName = "$value";
-            // command.Parameters.Add(parameter);
-            // // Insert a lot of data
-            //  parameter.Value = random.Next();
-            //  command.ExecuteNonQuery();
-            // transaction.Commit();
+            this.textBoxAction.Text = "";
+            this.toolStripProgressBarTable.Value = 0;
+            Application.DoEvents();
+
+            DateTime dtStart = DateTime.Now;
+
+            int countTables = 0;
+            int countRows = 0;
+
+            StringBuilder sb = new StringBuilder();
+
+            //
+            KaJourDAL.KaJour_Global_CE.SQLProvider = "SQLCE";
+            KaJourDAL.KaJour_Global_CE.SQLConnStr = "Data Source='" + this.textBoxSqlCe.Text + "'";
+
+            KaJourDAL.KaJour_Global_LITE.SQLProvider = "SQLITE";
+            KaJourDAL.KaJour_Global_LITE.SQLConnStr = "Data Source='" + this.textBoxSQLite.Text + "'";
+
+            bool error = false;
+
+            bool testNRecords = this.checkBoxTestNRecords.Checked;
+            int testNRecordCount = -1;
+            try
+            {
+                testNRecordCount = Convert.ToInt32(this.textBoxTestNRecords.Text);
+            }
+            catch (Exception)
+            {
+            }
+
+            // ##############################################
+            sb.AppendLine(KaJourDAL.KaJour_Global_CE.SQLProvider + ":");
+
+            var sqLITE = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_LITE.SQLProvider, KaJourDAL.KaJour_Global_LITE.SQLConnStr);
+            try
+            {
+                sqLITE.Connect();
+                sqLITE.DisConnect();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                return ret;
+            }
+
+            var sqlCe = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_CE.SQLProvider, KaJourDAL.KaJour_Global_CE.SQLConnStr);
+            DataTable tablesCE = null;
+            try
+            {
+                sqlCe.Connect();
+                tablesCE = sqlCe.GetTableList("", false);
+                sqlCe.DisConnect();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                return ret;
+            }
+            if (tablesCE != null){
+                for (int iTable = 0; iTable < tablesCE.Rows.Count; iTable++){
+                    countTables++;
+
+                    var tableName = tablesCE.Rows[iTable][0].ToString();
+                    sqlCe.Connect();
+                    var tableRec1 = sqlCe.GetTableRecCount(tableName);
+                    sqlCe.DisConnect();
+
+                    this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesCE.Rows.Count;
+                    this.toolStripStatusLabel2.Text = " " + (iTable + 1).ToString() + "/" + tablesCE.Rows.Count.ToString() + " " + tableName + " 0/" + tableRec1.ToString() + " ";
+                    Application.DoEvents();
+
+                    sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
+
+                    // delete SQLite
+                    var del = sqLITE.DeleteBuilder(tableName);
+                    var retDel = sqLITE.ExecuteNonQuery("DELETE", del);
+
+                    bool paraOk = false;
+                    //var par = sqlCe.InitParameterList();
+                    string sqlFieldList = "";
+                    string sqlValueList = "";
+                    string sqlIns = sqLITE.InsertBuilder(tableName);    // "insert into Table"
+
+                    // using (var transaction = connection.BeginTransaction())
+                    // var command = connection.CreateCommand();
+                    // command.CommandText = "INSERT INTO data VALUES ($value)"
+                    // var parameter = command.CreateParameter();
+                    // parameter.ParameterName = "$value";
+                    // command.Parameters.Add(parameter);
+                    // // Insert a lot of data
+                    //  parameter.Value = random.Next();
+                    //  command.ExecuteNonQuery();
+                    // transaction.Commit();
+
+                    sqLITE.BeginTransaction();
+
+                    var tableSelect = sqlCe.Execute("SELECT", "SELECT * FROM " + tableName);
+                    for (int iRow = 0; iRow < tableSelect.Rows.Count; iRow++){
+                        countRows++;
+
+                        // Parameter
+                        //par = sqlCe.InitParameterList();
+                        if (!paraOk){
+                            // Parameter
+                            List<string> paramList = new List<string>();
+
+                            sqlFieldList = "";
+                            sqlValueList = "";
+                            for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++){
+                                var colVal = tableSelect.Rows[iRow][iCol];
+                                var colName = tableSelect.Columns[iCol].ColumnName;
+
+                                //par.Add(colName, colVal);
+                                paramList.Add(colName);
+
+                                // (Fld1) values (@Fld1)
+                                if (sqlFieldList != "") { sqlFieldList += ","; }
+                                sqlFieldList += " " + colName;
+
+                                if (sqlValueList != "") { sqlValueList += ","; }
+                                sqlValueList += " @" + colName;
+                            }
+
+                            // insert into SQLite
+                            //sqlIns += " (" + sqlFieldList + ") VALUES (" + sqlValueList + ")";  // " (Fld1) values (@Fld1)"
+                            sqlIns += " VALUES (" + sqlValueList + ")";  // " values (@Fld1)"
+
+                            sqLITE.CreateCommand(sqlIns);
+                            sqLITE.AddParameters(paramList);
+
+                            paraOk = true;
+                        }
+
+                        List<object> paramValues = new List<object>();
+                        for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++){
+                            var colVal = tableSelect.Rows[iRow][iCol];
+                            var colName = tableSelect.Columns[iCol].ColumnName;
+
+                            //par[colName] = colVal;
+                            paramValues.Add(colVal);
+                        }
+                        sqLITE.SetParameters(paramValues);
+
+                        this.toolStripStatusLabel2.Text = " " + (iTable + 1).ToString() + "/" + tablesCE.Rows.Count.ToString() + " " + tableName + " " + (iRow + 1).ToString() + "/" + tableRec1.ToString() + " ";
+                        bool doEvents = CalcModulo(iRow);
+                        if (doEvents)
+                        {
+                            Application.DoEvents();
+                        }
+
+                        // Test
+                        if (testNRecords)
+                        {
+                            if (testNRecordCount > 0)
+                            {
+                                if (iRow >= testNRecordCount)
+                                {
+                                    break;  //=================>
+                                }
+                            }
+                        }
+
+                        // Insert
+                        var retIns = sqLITE.ExecuteNonQuery("INSERT");
+                        var exc = sqLITE.GetException();
+                        if (exc != null)
+                        {
+                            MessageBox.Show("Error:" + exc.Message);
+                            sb.AppendLine("--------------------");
+                            sb.AppendLine("Error:" + exc.Message);
+                            sb.AppendLine("--------------------");
+
+                            error = true;
+                            break;  //=================>
+                        }
+                    }
+                    if (error)
+                    {
+                        break;  //=================>
+                    }
+
+                    sqLITE.EndTransaction();
+
+                    ret = true;
+                }
+            }
+
+            this.toolStripProgressBarTable.Value = 100;
+
+            DateTime dtEnde = DateTime.Now;
+
+            TimeSpan ts = dtEnde - dtStart;
+            string timings = "Duration: " + dtStart.ToString("HH:mm:ss") + " - " + dtEnde.ToString("HH:mm:ss") + " -> " + ts.ToString();
+            double RecPerSec = countRows / ts.TotalSeconds;
+            sb.AppendLine("Count: Tables: " + countTables.ToString() + ", Rows: " + countRows.ToString() + ", Rec/Sec: " + RecPerSec.ToString());
+            sb.AppendLine("" + timings);
+            this.textBoxAction.Text = sb.ToString();
+
+            this.toolStripStatusLabel2.Text = " Fertig: " + timings;
 
             return ret;
         }
@@ -534,9 +731,7 @@ namespace SqlCe2SQLite
                             //var sqLITE = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_LITE.SQLProvider, KaJourDAL.KaJour_Global_LITE.SQLConnStr);
                             sqlIns += " (" + sqlFieldList + ") VALUES (" + sqlValueList + ")";  // (Fld1) values (@Fld1)
 
-
-
-
+                            //...
 
                             paraOk = true;
                         }
@@ -551,48 +746,8 @@ namespace SqlCe2SQLite
                         }
 
                         this.toolStripStatusLabel2.Text = " " + (iTable + 1).ToString() + "/" + tablesCE.Rows.Count.ToString() + " " + tableName + " " + (iRow + 1).ToString() + "/" + tableRec1.ToString() + " ";
-                        // - 1,2,3,4,5,6,7,8,9,10
-                        // - 20,30,40,50,60,70,80,90,100
-                        // - 200,300,400,500,600,700,800,900,1000
-                        // - 2000,3000,4000,5000,6000,7000,8000,9000,10000
-                        // - 20000,30000,40000,50000,60000,70000, ...
-                        bool doEvents = false;
-                        var iRowP1 = iRow + 1;
-                        if (iRowP1 <= 10)
-                        {
-                            doEvents = true;
-                        }
-                        else if (iRowP1 <= 100)
-                        {
-                            // mod 10
-                            if ((iRowP1 % 10) == 0) { doEvents = true; }
-                        }
-                        else if (iRowP1 <= 1000)
-                        {
-                            // mod 100
-                            if ((iRowP1 % 100) == 0) { doEvents = true; }
-                        }
-                        else if (iRowP1 <= 10000)
-                        {
-                            // mod 1000
-                            if ((iRowP1 % 1000) == 0) { doEvents = true; }
-                        }
-                        else if (iRowP1 <= 100000)
-                        {
-                            // mod 10000
-                            if ((iRowP1 % 10000) == 0) { doEvents = true; }
-                        }
-                        else if (iRowP1 <= 1000000)
-                        {
-                            // mod 100000
-                            if ((iRowP1 % 100000) == 0) { doEvents = true; }
-                        }
-                        else if (iRowP1 <= 10000000)
-                        {
-                            // mod 1000000
-                            if ((iRowP1 % 1000000) == 0) { doEvents = true; }
-                        }
-                        // ...
+
+                        bool doEvents = CalcModulo(iRow);
                         if (doEvents)
                         {
                             Application.DoEvents();
@@ -647,6 +802,55 @@ namespace SqlCe2SQLite
             this.toolStripStatusLabel2.Text = " Fertig: " + timings;
 
             return ret;
+        }
+
+        private bool CalcModulo(int iRow)
+        {
+            bool doEvents = false;
+
+            // - 1,2,3,4,5,6,7,8,9,10
+            // - 20,30,40,50,60,70,80,90,100
+            // - 200,300,400,500,600,700,800,900,1000
+            // - 2000,3000,4000,5000,6000,7000,8000,9000,10000
+            // - 20000,30000,40000,50000,60000,70000, ...
+            var iRowP1 = iRow + 1;
+            if (iRowP1 <= 10)
+            {
+                doEvents = true;
+            }
+            else if (iRowP1 <= 100)
+            {
+                // mod 10
+                if ((iRowP1 % 10) == 0) { doEvents = true; }
+            }
+            else if (iRowP1 <= 1000)
+            {
+                // mod 100
+                if ((iRowP1 % 100) == 0) { doEvents = true; }
+            }
+            else if (iRowP1 <= 10000)
+            {
+                // mod 1000
+                if ((iRowP1 % 1000) == 0) { doEvents = true; }
+            }
+            else if (iRowP1 <= 100000)
+            {
+                // mod 10000
+                if ((iRowP1 % 10000) == 0) { doEvents = true; }
+            }
+            else if (iRowP1 <= 1000000)
+            {
+                // mod 100000
+                if ((iRowP1 % 100000) == 0) { doEvents = true; }
+            }
+            else if (iRowP1 <= 10000000)
+            {
+                // mod 1000000
+                if ((iRowP1 % 1000000) == 0) { doEvents = true; }
+            }
+            // ...
+
+            return doEvents;
         }
     }
 }

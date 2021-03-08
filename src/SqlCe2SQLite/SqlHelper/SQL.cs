@@ -1772,22 +1772,31 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             return parameters;
         }
 
-        // using (var transaction = connection.BeginTransaction())
-        public void BeginTransaction() {
-            if (_SqlType == SQLProvider.SQLCE){
+        public void BeginTransaction()
+        {
+            if (_SqlType == SQLProvider.SQLCE)
+            {
                 throw new NotImplementedException();
             }
             else if (_SqlType == SQLProvider.MSSQL)
             {
                 throw new NotImplementedException();
             }
-            else if (_SqlType == SQLProvider.SQLITE){
+            else if (_SqlType == SQLProvider.SQLITE)
+            {
+                // using (var transaction = connection.BeginTransaction())
+
                 this.Connect();
                 _SqliteTransaction = _SqliteConn.BeginTransaction();
             }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
-        public void EndTransaction() {
+        public void EndTransaction()
+        {
             if (_SqlType == SQLProvider.SQLCE)
             {
                 throw new NotImplementedException();
@@ -1798,12 +1807,19 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             }
             else if (_SqlType == SQLProvider.SQLITE)
             {
+                // transaction.Commit();
+
                 _SqliteTransaction.Commit();
                 this.DisConnect();
             }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
-        public void CreateCommand(string sqlCommand){
+        public void CreateCommand(string sqlCommand)
+        {
             if (_SqlType == SQLProvider.SQLCE)
             {
                 throw new NotImplementedException();
@@ -1814,12 +1830,20 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             }
             else if (_SqlType == SQLProvider.SQLITE)
             {
+                // var command = connection.CreateCommand();
+                // command.CommandText = "INSERT INTO data VALUES ($value)"
+
                 _SqliteCommand = _SqliteConn.CreateCommand();
                 _SqliteCommand.CommandText = sqlCommand;
             }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
-        public void AddParameters(List<string> parameterList){
+        public void AddParameters(List<string> parameterList)
+        {
             if (_SqlType == SQLProvider.SQLCE)
             {
                 throw new NotImplementedException();
@@ -1830,6 +1854,10 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             }
             else if (_SqlType == SQLProvider.SQLITE)
             {
+                // var parameter = command.CreateParameter();
+                // parameter.ParameterName = "$value";
+                // command.Parameters.Add(parameter);
+
                 _SqliteParameterArray = new SQLiteParameter[parameterList.Count];
                 //_SqliteParameterArray = new SQLiteParameter[] { new SQLiteParameter("@val") };
                 int i = 0;
@@ -1841,9 +1869,10 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                     i++;
                 }
                 _SqliteCommand.Parameters.AddRange(_SqliteParameterArray);
-
-                //parameter.Value = "nextVal";
-                //command.ExecuteNonQuery();
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -1859,22 +1888,27 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             }
             else if (_SqlType == SQLProvider.SQLITE)
             {
-                //_SqliteParameterArray = new SQLiteParameter[parameterList.Count];
-                //_SqliteParameterArray = new SQLiteParameter[] { new SQLiteParameter("@val") };
+                // // Insert a lot of data
+                //  parameter.Value = random.Next();
+
                 int i = 0;
                 foreach (var item in parameterList)
                 {
-                    //var parameter = _SqliteCommand.CreateParameter();
-                    //parameter.ParameterName = item;
                     _SqliteParameterArray[i].Value = item;
                     i++;
                 }
-                //_SqliteCommand.Parameters.AddRange(_SqliteParameterArray);
-
-                //parameter.Value = "nextVal";
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
 
+        /// <summary>
+        /// ExecuteNonQuery, needs before: BeginTransaction(), CreateCommand(), AddParameters(), SetParameters() and after: EndTransaction()
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
         public int ExecuteNonQuery(string info)
         {
             int RA = -1;
@@ -1887,10 +1921,35 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             {
                 throw new NotImplementedException();
             }
-            else if (_SqlType == SQLProvider.SQLITE){
-                RA = _SqliteCommand.ExecuteNonQuery();
-                
-                //command.ExecuteNonQuery();
+            else if (_SqlType == SQLProvider.SQLITE)
+            {
+                if (_LogInfo)
+                {
+                    // Info-Log
+                    Dictionary<string, object> parameters = new Dictionary<string, object>();
+                    //parameters.Add();
+                    //_SqliteCommand.Parameters.
+                    this.Log("ExecuteNonQuery", info, _SqliteCommand.CommandText, parameters, null);
+                }
+
+                try
+                {
+                    // command.ExecuteNonQuery();
+
+                    RA = _SqliteCommand.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Dictionary<string, object> parameters = new Dictionary<string, object>();
+                    //
+                    this.Log("ExecuteNonQuery", info, _SqliteCommand.CommandText, parameters, ex);
+
+                    _SqlException = ex;
+                }
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
 
             return RA;

@@ -45,12 +45,14 @@
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.textBoxAction = new System.Windows.Forms.TextBox();
             this.buttonDispData = new System.Windows.Forms.Button();
+            this.checkBoxBulkInsert = new System.Windows.Forms.CheckBox();
             this.panelTop.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTop
             // 
+            this.panelTop.Controls.Add(this.checkBoxBulkInsert);
             this.panelTop.Controls.Add(this.buttonDispData);
             this.panelTop.Controls.Add(this.checkBoxTestNRecords);
             this.panelTop.Controls.Add(this.textBoxTestNRecords);
@@ -71,7 +73,7 @@
             // checkBoxTestNRecords
             // 
             this.checkBoxTestNRecords.AutoSize = true;
-            this.checkBoxTestNRecords.Location = new System.Drawing.Point(344, 35);
+            this.checkBoxTestNRecords.Location = new System.Drawing.Point(206, 35);
             this.checkBoxTestNRecords.Name = "checkBoxTestNRecords";
             this.checkBoxTestNRecords.Size = new System.Drawing.Size(99, 17);
             this.checkBoxTestNRecords.TabIndex = 11;
@@ -80,7 +82,7 @@
             // 
             // textBoxTestNRecords
             // 
-            this.textBoxTestNRecords.Location = new System.Drawing.Point(449, 33);
+            this.textBoxTestNRecords.Location = new System.Drawing.Point(311, 33);
             this.textBoxTestNRecords.Name = "textBoxTestNRecords";
             this.textBoxTestNRecords.Size = new System.Drawing.Size(41, 20);
             this.textBoxTestNRecords.TabIndex = 9;
@@ -167,7 +169,7 @@
             this.toolStripStatusLabel1,
             this.toolStripProgressBarTable,
             this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 398);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 447);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(735, 22);
             this.statusStrip1.TabIndex = 1;
@@ -210,11 +212,21 @@
             this.buttonDispData.UseVisualStyleBackColor = true;
             this.buttonDispData.Click += new System.EventHandler(this.buttonDispData_Click);
             // 
+            // checkBoxBulkInsert
+            // 
+            this.checkBoxBulkInsert.AutoSize = true;
+            this.checkBoxBulkInsert.Location = new System.Drawing.Point(358, 35);
+            this.checkBoxBulkInsert.Name = "checkBoxBulkInsert";
+            this.checkBoxBulkInsert.Size = new System.Drawing.Size(76, 17);
+            this.checkBoxBulkInsert.TabIndex = 13;
+            this.checkBoxBulkInsert.Text = "Bulk Insert";
+            this.checkBoxBulkInsert.UseVisualStyleBackColor = true;
+            // 
             // SqlCe2SQLiteMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(735, 420);
+            this.ClientSize = new System.Drawing.Size(735, 469);
             this.Controls.Add(this.textBoxAction);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panelTop);
@@ -249,6 +261,7 @@
         private System.Windows.Forms.CheckBox checkBoxTestNRecords;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.Button buttonDispData;
+        private System.Windows.Forms.CheckBox checkBoxBulkInsert;
     }
 }
 
