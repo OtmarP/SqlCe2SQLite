@@ -39,10 +39,11 @@ namespace SqlCe2SQLite
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
+            // Mo.08.03.2021 11:44:48 -op- Performance mit Bulk insert (V2)
             // Mo.08.03.2021 11:43:29 -op- Display Data (1 Table, max. 20 Rows)
             // So.07.03.2021 18:37:39 -op- Open File-Dialog für .sdf und .db3 #3
             // So.07.03.2021 17:52:39 -op- Errorhandling verbessert #2
-            //                              Count: Tables: 22, Rows: 83935, Rec/Sec: 36,375030792145
+            //                              Count: Tables: 22, Rows: 83935, Rec/Sec: 36,375030792145 (MS Surface Book)
             //                              Duration: 16:20:49 - 16:59:17 -> 00:38:27.4894556
             // So.07.03.2021 16:15:03 -op- Display Statistics (Tables, Rows, Rec/Sec, Duration) #1
             // So.07.03.2021 15:13:30 -op- Display Record# with modulo
@@ -66,7 +67,8 @@ namespace SqlCe2SQLite
             fileDialog.FileName = this.textBoxSqlCe.Text;
             fileDialog.Filter = "sdf files (*.sdf)|*.sdf|All files (*.*)|*.*";
             var ret = fileDialog.ShowDialog();
-            if (ret == DialogResult.OK) {
+            if (ret == DialogResult.OK)
+            {
                 this.textBoxSqlCe.Text = fileDialog.FileName;
             }
         }
@@ -124,7 +126,8 @@ namespace SqlCe2SQLite
             this.DisableEnabledControls(true);
         }
 
-        private void DisableEnabledControls(bool enabled) {
+        private void DisableEnabledControls(bool enabled)
+        {
             this.buttonExit.Enabled = enabled;
             this.buttonStatus.Enabled = enabled;
             this.buttonDelTarget.Enabled = enabled;
@@ -160,7 +163,7 @@ namespace SqlCe2SQLite
             KaJourDAL.KaJour_Global_LITE.SQLConnStr = "Data Source='" + this.textBoxSQLite.Text + "'";
 
             // ##############################################
-            sb.AppendLine(KaJourDAL.KaJour_Global_CE.SQLProvider+":");
+            sb.AppendLine(KaJourDAL.KaJour_Global_CE.SQLProvider + ":");
 
             var sqlCe = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_CE.SQLProvider, KaJourDAL.KaJour_Global_CE.SQLConnStr);
             DataTable tablesCE = null;
@@ -242,7 +245,8 @@ namespace SqlCe2SQLite
             return ret;
         }
 
-        private bool DelTarget(){
+        private bool DelTarget()
+        {
             bool ret = false;
 
             this.textBoxAction.Text = "";
@@ -300,7 +304,7 @@ namespace SqlCe2SQLite
                     sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString() + "   Del:" + retDel.ToString() + "   Rec:" + tableRec2.ToString());
                 }
             }
-            sb.AppendLine("  Count: Tables: " + countTables.ToString()+ ", Rows: " + countRows.ToString());
+            sb.AppendLine("  Count: Tables: " + countTables.ToString() + ", Rows: " + countRows.ToString());
 
             this.textBoxAction.Text = sb.ToString();
             this.toolStripProgressBarTable.Value = 100;
@@ -308,7 +312,8 @@ namespace SqlCe2SQLite
             return ret;
         }
 
-        private bool DispTarget(){
+        private bool DispTarget()
+        {
             bool ret = false;
 
             this.textBoxAction.Text = "";
@@ -387,6 +392,24 @@ namespace SqlCe2SQLite
 
             this.textBoxAction.Text = sb.ToString();
             this.toolStripProgressBarTable.Value = 100;
+
+            return ret;
+        }
+
+        private bool CopyDataV2(){
+
+            bool ret = false;
+
+            // using (var transaction = connection.BeginTransaction())
+            // var command = connection.CreateCommand();
+            // command.CommandText = "INSERT INTO data VALUES ($value)"
+            // var parameter = command.CreateParameter();
+            // parameter.ParameterName = "$value";
+            // command.Parameters.Add(parameter);
+            // // Insert a lot of data
+            //  parameter.Value = random.Next();
+            //  command.ExecuteNonQuery();
+            // transaction.Commit();
 
             return ret;
         }
@@ -474,10 +497,58 @@ namespace SqlCe2SQLite
                     var del = sqLITE.DeleteBuilder(tableName);
                     var retDel = sqLITE.ExecuteNonQuery("DELETE", del);
 
+                    bool paraOk = false;
+                    var par = sqlCe.InitParameterList();
+                    string sqlFieldList = "";
+                    string sqlValueList = "";
+                    string sqlIns = sqLITE.InsertBuilder(tableName);    // "insert into Table"
+
                     var tableSelect = sqlCe.Execute("SELECT", "SELECT * FROM " + tableName);
                     for (int iRow = 0; iRow < tableSelect.Rows.Count; iRow++)
                     {
                         countRows++;
+
+                        // Parameter
+                        //par = sqlCe.InitParameterList();
+                        if (!paraOk)
+                        {
+                            // Parameter
+                            sqlFieldList = "";
+                            sqlValueList = "";
+                            for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
+                            {
+                                var colVal = tableSelect.Rows[iRow][iCol];
+                                var colName = tableSelect.Columns[iCol].ColumnName;
+
+                                par.Add(colName, colVal);
+
+                                // (Fld1) values (@Fld1)
+                                if (sqlFieldList != "") { sqlFieldList += ","; }
+                                sqlFieldList += " " + colName;
+
+                                if (sqlValueList != "") { sqlValueList += ","; }
+                                sqlValueList += " @" + colName;
+                            }
+
+                            // insert into SQLite
+                            //var sqLITE = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_LITE.SQLProvider, KaJourDAL.KaJour_Global_LITE.SQLConnStr);
+                            sqlIns += " (" + sqlFieldList + ") VALUES (" + sqlValueList + ")";  // (Fld1) values (@Fld1)
+
+
+
+
+
+                            paraOk = true;
+                        }
+
+                        for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
+                        {
+                            var colVal = tableSelect.Rows[iRow][iCol];
+                            var colName = tableSelect.Columns[iCol].ColumnName;
+                            //par.Add(colName, colVal);
+
+                            par[colName] = colVal;
+                        }
 
                         this.toolStripStatusLabel2.Text = " " + (iTable + 1).ToString() + "/" + tablesCE.Rows.Count.ToString() + " " + tableName + " " + (iRow + 1).ToString() + "/" + tableRec1.ToString() + " ";
                         // - 1,2,3,4,5,6,7,8,9,10
@@ -539,27 +610,7 @@ namespace SqlCe2SQLite
                             }
                         }
 
-                        var par = sqlCe.InitParameterList();
-                        string sqlFieldList = "";
-                        string sqlValueList = "";
-                        for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
-                        {
-                            var colVal = tableSelect.Rows[iRow][iCol];
-                            var colName = tableSelect.Columns[iCol].ColumnName;
-                            par.Add(colName, colVal);
-                            // (Fld1) values (@Fld1)
-                            if (sqlFieldList != "") { sqlFieldList += ","; }
-                            sqlFieldList += " " + colName;
-
-                            if (sqlValueList != "") { sqlValueList += ","; }
-                            sqlValueList += " @" + colName;
-                        }
-
-                        // insert into SQLite
-                        //var sqLITE = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_LITE.SQLProvider, KaJourDAL.KaJour_Global_LITE.SQLConnStr);
-                        string sqlIns = sqLITE.InsertBuilder(tableName);    // "insert into Table"
-                                                                            // (Fld1) values (@Fld1)
-                        sqlIns += " (" + sqlFieldList + ") VALUES (" + sqlValueList + ")";
+                        // Insert
                         var retIns = sqLITE.ExecuteNonQuery("INSERT", sqlIns, par);
                         var exc = sqLITE.GetException();
                         if (exc != null)
@@ -597,6 +648,5 @@ namespace SqlCe2SQLite
 
             return ret;
         }
-
     }
 }

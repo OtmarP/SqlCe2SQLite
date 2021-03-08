@@ -49,6 +49,11 @@ namespace KaJourDAL
         // Exception
         private System.Exception _SqlException;
 
+        private SQLiteTransaction _SqliteTransaction;
+        private SQLiteCommand _SqliteCommand;
+        //private SQLiteParameterCollection _SqliteParameterCollection;
+        private SQLiteParameter[] _SqliteParameterArray;
+
         // ******************
         // Constructor
         // ******************
@@ -573,6 +578,9 @@ namespace KaJourDAL
         // GetDatabaseInfo.Case Sensitive: False                      GetDatabaseInfo.: -
         // --------------------------------------------------------------------------------------------------------
 
+        /// <summary>
+        /// Set ConnectionString and .Open()
+        /// </summary>
         public void Connect()
         {
             // string sqlProvider, string sqlConnStr
@@ -1762,6 +1770,130 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             return parameters;
+        }
+
+        // using (var transaction = connection.BeginTransaction())
+        public void BeginTransaction() {
+            if (_SqlType == SQLProvider.SQLCE){
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.MSSQL)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.SQLITE){
+                this.Connect();
+                _SqliteTransaction = _SqliteConn.BeginTransaction();
+            }
+        }
+
+        public void EndTransaction() {
+            if (_SqlType == SQLProvider.SQLCE)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.MSSQL)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.SQLITE)
+            {
+                _SqliteTransaction.Commit();
+                this.DisConnect();
+            }
+        }
+
+        public void CreateCommand(string sqlCommand){
+            if (_SqlType == SQLProvider.SQLCE)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.MSSQL)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.SQLITE)
+            {
+                _SqliteCommand = _SqliteConn.CreateCommand();
+                _SqliteCommand.CommandText = sqlCommand;
+            }
+        }
+
+        public void AddParameters(List<string> parameterList){
+            if (_SqlType == SQLProvider.SQLCE)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.MSSQL)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.SQLITE)
+            {
+                _SqliteParameterArray = new SQLiteParameter[parameterList.Count];
+                //_SqliteParameterArray = new SQLiteParameter[] { new SQLiteParameter("@val") };
+                int i = 0;
+                foreach (var item in parameterList)
+                {
+                    var parameter = _SqliteCommand.CreateParameter();
+                    parameter.ParameterName = item;
+                    _SqliteParameterArray[i] = parameter;
+                    i++;
+                }
+                _SqliteCommand.Parameters.AddRange(_SqliteParameterArray);
+
+                //parameter.Value = "nextVal";
+                //command.ExecuteNonQuery();
+            }
+        }
+
+        public void SetParameters(List<object> parameterList)
+        {
+            if (_SqlType == SQLProvider.SQLCE)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.MSSQL)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.SQLITE)
+            {
+                //_SqliteParameterArray = new SQLiteParameter[parameterList.Count];
+                //_SqliteParameterArray = new SQLiteParameter[] { new SQLiteParameter("@val") };
+                int i = 0;
+                foreach (var item in parameterList)
+                {
+                    //var parameter = _SqliteCommand.CreateParameter();
+                    //parameter.ParameterName = item;
+                    _SqliteParameterArray[i].Value = item;
+                    i++;
+                }
+                //_SqliteCommand.Parameters.AddRange(_SqliteParameterArray);
+
+                //parameter.Value = "nextVal";
+            }
+        }
+
+        public int ExecuteNonQuery(string info)
+        {
+            int RA = -1;
+
+            if (_SqlType == SQLProvider.SQLCE)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.MSSQL)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_SqlType == SQLProvider.SQLITE){
+                RA = _SqliteCommand.ExecuteNonQuery();
+                
+                //command.ExecuteNonQuery();
+            }
+
+            return RA;
         }
 
         /// <summary>
