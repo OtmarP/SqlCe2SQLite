@@ -27,7 +27,7 @@ namespace SqlCe2SQLite
             this.textBoxTestNRecords.Text = "50";
             this.checkBoxBulkInsert.Checked = true;
 
-            this.Text = "SqlCe2SQLite v:2021.03.04";
+            this.Text = "SqlCe2SQLite v:2021.03.08";
 #if DEBUG
             this.Text += "   ***DEBUG***";
 #endif
@@ -41,6 +41,7 @@ namespace SqlCe2SQLite
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
+            // Mo.08.03.2021 16:42:16 -op- v:2021.03.08
             //                             V2: Count: Tables: 22, Rows: 83935, Rec/Sec: 6044,44276733292 (Microsoft Surface Book)
             //                                 Duration: 16:18:09 - 16:18:23 -> 00:00:13.8863090
             // Mo.08.03.2021 11:44:48 -op- Performance mit Bulk insert (V2)
