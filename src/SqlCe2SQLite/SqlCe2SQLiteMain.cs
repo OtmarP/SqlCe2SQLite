@@ -39,6 +39,8 @@ namespace SqlCe2SQLite
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
+            // Mo.08.03.2021 11:43:29 -op- Display Data (1 Table, max. 20 Rows)
+            // So.07.03.2021 18:37:39 -op- Open File-Dialog für .sdf und .db3 #3
             // So.07.03.2021 17:52:39 -op- Errorhandling verbessert #2
             //                              Count: Tables: 22, Rows: 83935, Rec/Sec: 36,375030792145
             //                              Duration: 16:20:49 - 16:59:17 -> 00:38:27.4894556
@@ -112,10 +114,21 @@ namespace SqlCe2SQLite
             this.DisableEnabledControls(true);
         }
 
+        private void buttonDispData_Click(object sender, EventArgs e)
+        {
+            // Disp Data
+            this.DisableEnabledControls(false);
+
+            var ret = this.DispTarget();
+
+            this.DisableEnabledControls(true);
+        }
+
         private void DisableEnabledControls(bool enabled) {
             this.buttonExit.Enabled = enabled;
             this.buttonStatus.Enabled = enabled;
             this.buttonDelTarget.Enabled = enabled;
+            this.buttonDispData.Enabled = enabled;
             this.buttonCopy.Enabled = enabled;
             Application.DoEvents();
         }
@@ -288,6 +301,89 @@ namespace SqlCe2SQLite
                 }
             }
             sb.AppendLine("  Count: Tables: " + countTables.ToString()+ ", Rows: " + countRows.ToString());
+
+            this.textBoxAction.Text = sb.ToString();
+            this.toolStripProgressBarTable.Value = 100;
+
+            return ret;
+        }
+
+        private bool DispTarget(){
+            bool ret = false;
+
+            this.textBoxAction.Text = "";
+            this.toolStripProgressBarTable.Value = 0;
+            Application.DoEvents();
+
+            int countTables = 0;
+            int countRows = 0;
+
+            StringBuilder sb = new StringBuilder();
+
+            KaJourDAL.KaJour_Global_LITE.SQLProvider = "SQLITE";
+            KaJourDAL.KaJour_Global_LITE.SQLConnStr = "Data Source='" + this.textBoxSQLite.Text + "'";
+
+            // ##############################################
+            sb.AppendLine(KaJourDAL.KaJour_Global_LITE.SQLProvider + ":");
+
+            var sqLITE = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_LITE.SQLProvider, KaJourDAL.KaJour_Global_LITE.SQLConnStr);
+            DataTable tablesLITE = null;
+            try
+            {
+                sqLITE.Connect();
+                tablesLITE = sqLITE.GetTableList("", false);
+                sqLITE.DisConnect();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                return ret;
+            }
+            if (tablesLITE != null)
+            {
+                for (int iTable = 0; iTable < tablesLITE.Rows.Count; iTable++)
+                {
+                    countTables++;
+
+                    var tableName = tablesLITE.Rows[iTable][0].ToString();
+                    sqLITE.Connect();
+                    var tableRec1 = sqLITE.GetTableRecCount(tableName);
+                    sqLITE.DisConnect();
+
+                    this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesLITE.Rows.Count;
+                    Application.DoEvents();
+
+                    sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
+
+                    //countRows += tableRec1;
+
+                    // Display
+                    var sel = "SELECT * FROM " + tableName;
+                    DataTable tableSelect = sqLITE.Execute("SELECT", sel);
+                    for (int iRow = 0; iRow < tableSelect.Rows.Count; iRow++)
+                    {
+                        countRows++;
+
+                        for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
+                        {
+                            var colVal = tableSelect.Rows[iRow][iCol];
+                            sb.Append(colVal);
+                            sb.Append(", ");
+                        }
+                        sb.AppendLine("");
+
+                        if (iRow >= 20)
+                        {
+                            break;  //====================>
+                        }
+                    }
+
+                    if (iTable >= 0)
+                    {
+                        break;  //====================>
+                    }
+                }
+            }
 
             this.textBoxAction.Text = sb.ToString();
             this.toolStripProgressBarTable.Value = 100;
@@ -501,5 +597,6 @@ namespace SqlCe2SQLite
 
             return ret;
         }
+
     }
 }

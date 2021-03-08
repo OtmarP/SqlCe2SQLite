@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
+// OpSoftware.OpTools.SQL
 namespace KaJourDAL
 {
     public class SQL

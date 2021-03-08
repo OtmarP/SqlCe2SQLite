@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.panelTop = new System.Windows.Forms.Panel();
+            this.checkBoxTestNRecords = new System.Windows.Forms.CheckBox();
+            this.textBoxTestNRecords = new System.Windows.Forms.TextBox();
             this.buttonDelTarget = new System.Windows.Forms.Button();
             this.buttonStatus = new System.Windows.Forms.Button();
             this.buttonCopy = new System.Windows.Forms.Button();
@@ -40,16 +42,16 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBarTable = new System.Windows.Forms.ToolStripProgressBar();
-            this.textBoxAction = new System.Windows.Forms.TextBox();
-            this.textBoxTestNRecords = new System.Windows.Forms.TextBox();
-            this.checkBoxTestNRecords = new System.Windows.Forms.CheckBox();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.textBoxAction = new System.Windows.Forms.TextBox();
+            this.buttonDispData = new System.Windows.Forms.Button();
             this.panelTop.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTop
             // 
+            this.panelTop.Controls.Add(this.buttonDispData);
             this.panelTop.Controls.Add(this.checkBoxTestNRecords);
             this.panelTop.Controls.Add(this.textBoxTestNRecords);
             this.panelTop.Controls.Add(this.buttonDelTarget);
@@ -66,9 +68,26 @@
             this.panelTop.Size = new System.Drawing.Size(735, 65);
             this.panelTop.TabIndex = 0;
             // 
+            // checkBoxTestNRecords
+            // 
+            this.checkBoxTestNRecords.AutoSize = true;
+            this.checkBoxTestNRecords.Location = new System.Drawing.Point(344, 35);
+            this.checkBoxTestNRecords.Name = "checkBoxTestNRecords";
+            this.checkBoxTestNRecords.Size = new System.Drawing.Size(99, 17);
+            this.checkBoxTestNRecords.TabIndex = 11;
+            this.checkBoxTestNRecords.Text = "Test n Records";
+            this.checkBoxTestNRecords.UseVisualStyleBackColor = true;
+            // 
+            // textBoxTestNRecords
+            // 
+            this.textBoxTestNRecords.Location = new System.Drawing.Point(449, 33);
+            this.textBoxTestNRecords.Name = "textBoxTestNRecords";
+            this.textBoxTestNRecords.Size = new System.Drawing.Size(41, 20);
+            this.textBoxTestNRecords.TabIndex = 9;
+            // 
             // buttonDelTarget
             // 
-            this.buttonDelTarget.Location = new System.Drawing.Point(84, 31);
+            this.buttonDelTarget.Location = new System.Drawing.Point(545, 31);
             this.buttonDelTarget.Name = "buttonDelTarget";
             this.buttonDelTarget.Size = new System.Drawing.Size(75, 23);
             this.buttonDelTarget.TabIndex = 8;
@@ -166,6 +185,12 @@
             this.toolStripProgressBarTable.Size = new System.Drawing.Size(100, 16);
             this.toolStripProgressBarTable.Value = 50;
             // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(118, 17);
+            this.toolStripStatusLabel2.Text = "toolStripStatusLabel2";
+            // 
             // textBoxAction
             // 
             this.textBoxAction.Location = new System.Drawing.Point(12, 89);
@@ -175,28 +200,15 @@
             this.textBoxAction.Size = new System.Drawing.Size(478, 287);
             this.textBoxAction.TabIndex = 2;
             // 
-            // textBoxTestNRecords
+            // buttonDispData
             // 
-            this.textBoxTestNRecords.Location = new System.Drawing.Point(449, 33);
-            this.textBoxTestNRecords.Name = "textBoxTestNRecords";
-            this.textBoxTestNRecords.Size = new System.Drawing.Size(41, 20);
-            this.textBoxTestNRecords.TabIndex = 9;
-            // 
-            // checkBoxTestNRecords
-            // 
-            this.checkBoxTestNRecords.AutoSize = true;
-            this.checkBoxTestNRecords.Location = new System.Drawing.Point(344, 35);
-            this.checkBoxTestNRecords.Name = "checkBoxTestNRecords";
-            this.checkBoxTestNRecords.Size = new System.Drawing.Size(99, 17);
-            this.checkBoxTestNRecords.TabIndex = 11;
-            this.checkBoxTestNRecords.Text = "Test n Records";
-            this.checkBoxTestNRecords.UseVisualStyleBackColor = true;
-            // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabel2.Text = "toolStripStatusLabel2";
+            this.buttonDispData.Location = new System.Drawing.Point(626, 31);
+            this.buttonDispData.Name = "buttonDispData";
+            this.buttonDispData.Size = new System.Drawing.Size(75, 23);
+            this.buttonDispData.TabIndex = 12;
+            this.buttonDispData.Text = "Disp Data";
+            this.buttonDispData.UseVisualStyleBackColor = true;
+            this.buttonDispData.Click += new System.EventHandler(this.buttonDispData_Click);
             // 
             // SqlCe2SQLiteMain
             // 
@@ -236,6 +248,7 @@
         private System.Windows.Forms.TextBox textBoxTestNRecords;
         private System.Windows.Forms.CheckBox checkBoxTestNRecords;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.Button buttonDispData;
     }
 }
 
