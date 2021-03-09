@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.panelTop = new System.Windows.Forms.Panel();
+            this.checkBoxBulkInsert = new System.Windows.Forms.CheckBox();
+            this.buttonDispData = new System.Windows.Forms.Button();
             this.checkBoxTestNRecords = new System.Windows.Forms.CheckBox();
             this.textBoxTestNRecords = new System.Windows.Forms.TextBox();
             this.buttonDelTarget = new System.Windows.Forms.Button();
@@ -44,10 +46,15 @@
             this.toolStripProgressBarTable = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.textBoxAction = new System.Windows.Forms.TextBox();
-            this.buttonDispData = new System.Windows.Forms.Button();
-            this.checkBoxBulkInsert = new System.Windows.Forms.CheckBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panelTop.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // panelTop
@@ -69,6 +76,26 @@
             this.panelTop.Name = "panelTop";
             this.panelTop.Size = new System.Drawing.Size(735, 65);
             this.panelTop.TabIndex = 0;
+            // 
+            // checkBoxBulkInsert
+            // 
+            this.checkBoxBulkInsert.AutoSize = true;
+            this.checkBoxBulkInsert.Location = new System.Drawing.Point(358, 35);
+            this.checkBoxBulkInsert.Name = "checkBoxBulkInsert";
+            this.checkBoxBulkInsert.Size = new System.Drawing.Size(76, 17);
+            this.checkBoxBulkInsert.TabIndex = 13;
+            this.checkBoxBulkInsert.Text = "Bulk Insert";
+            this.checkBoxBulkInsert.UseVisualStyleBackColor = true;
+            // 
+            // buttonDispData
+            // 
+            this.buttonDispData.Location = new System.Drawing.Point(626, 31);
+            this.buttonDispData.Name = "buttonDispData";
+            this.buttonDispData.Size = new System.Drawing.Size(75, 23);
+            this.buttonDispData.TabIndex = 12;
+            this.buttonDispData.Text = "Disp Data";
+            this.buttonDispData.UseVisualStyleBackColor = true;
+            this.buttonDispData.Click += new System.EventHandler(this.buttonDispData_Click);
             // 
             // checkBoxTestNRecords
             // 
@@ -195,39 +222,44 @@
             // 
             // textBoxAction
             // 
-            this.textBoxAction.Location = new System.Drawing.Point(12, 89);
+            this.textBoxAction.Location = new System.Drawing.Point(15, 20);
             this.textBoxAction.Multiline = true;
             this.textBoxAction.Name = "textBoxAction";
             this.textBoxAction.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxAction.Size = new System.Drawing.Size(478, 287);
+            this.textBoxAction.Size = new System.Drawing.Size(211, 104);
             this.textBoxAction.TabIndex = 2;
             // 
-            // buttonDispData
+            // splitContainer1
             // 
-            this.buttonDispData.Location = new System.Drawing.Point(626, 31);
-            this.buttonDispData.Name = "buttonDispData";
-            this.buttonDispData.Size = new System.Drawing.Size(75, 23);
-            this.buttonDispData.TabIndex = 12;
-            this.buttonDispData.Text = "Disp Data";
-            this.buttonDispData.UseVisualStyleBackColor = true;
-            this.buttonDispData.Click += new System.EventHandler(this.buttonDispData_Click);
+            this.splitContainer1.Location = new System.Drawing.Point(12, 82);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // checkBoxBulkInsert
+            // splitContainer1.Panel1
             // 
-            this.checkBoxBulkInsert.AutoSize = true;
-            this.checkBoxBulkInsert.Location = new System.Drawing.Point(358, 35);
-            this.checkBoxBulkInsert.Name = "checkBoxBulkInsert";
-            this.checkBoxBulkInsert.Size = new System.Drawing.Size(76, 17);
-            this.checkBoxBulkInsert.TabIndex = 13;
-            this.checkBoxBulkInsert.Text = "Bulk Insert";
-            this.checkBoxBulkInsert.UseVisualStyleBackColor = true;
+            this.splitContainer1.Panel1.Controls.Add(this.dataGridView1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.textBoxAction);
+            this.splitContainer1.Size = new System.Drawing.Size(391, 288);
+            this.splitContainer1.SplitterDistance = 144;
+            this.splitContainer1.TabIndex = 3;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(15, 15);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(240, 108);
+            this.dataGridView1.TabIndex = 0;
             // 
             // SqlCe2SQLiteMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(735, 469);
-            this.Controls.Add(this.textBoxAction);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panelTop);
             this.Name = "SqlCe2SQLiteMain";
@@ -237,6 +269,12 @@
             this.panelTop.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -262,6 +300,8 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.Button buttonDispData;
         private System.Windows.Forms.CheckBox checkBoxBulkInsert;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }
 

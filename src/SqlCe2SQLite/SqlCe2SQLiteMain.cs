@@ -19,10 +19,13 @@ namespace SqlCe2SQLite
             this.Top = 50;
             this.Left = 50;
 
+            this.splitContainer1.Dock = DockStyle.Fill;
+            this.textBoxAction.Dock = DockStyle.Fill;
+            this.dataGridView1.Dock = DockStyle.Fill;
+
             this.toolStripStatusLabel1.Text = "";
             this.toolStripStatusLabel2.Text = "";
             this.toolStripProgressBarTable.Value = 0;
-            this.textBoxAction.Dock = DockStyle.Fill;
             this.checkBoxTestNRecords.Checked = true;
             this.textBoxTestNRecords.Text = "50";
             this.checkBoxBulkInsert.Checked = true;
@@ -41,6 +44,7 @@ namespace SqlCe2SQLite
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
+            // Di.09.03.2021 17:20:29 -op- DataGrid
             // Mo.08.03.2021 16:42:16 -op- v:2021.03.08
             //                             V2: Count: Tables: 22, Rows: 83935, Rec/Sec: 6044,44276733292 (Microsoft Surface Book)
             //                                 Duration: 16:18:09 - 16:18:23 -> 00:00:13.8863090
