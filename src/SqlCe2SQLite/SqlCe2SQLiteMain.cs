@@ -12,6 +12,8 @@ namespace SqlCe2SQLite
 {
     public partial class SqlCe2SQLiteMain : Form
     {
+        KaJourHelper.DataGridHelper _dgh;
+
         public SqlCe2SQLiteMain()
         {
             InitializeComponent();
@@ -39,12 +41,29 @@ namespace SqlCe2SQLite
             this.textBoxSqlCe.Text = @"C:\temp\KaJour\Prod\Prod2\KAJOUR4.sdf";
             this.textBoxSQLite.Text = @"C:\temp\KaJour\Prod\Prod2\KAJOUR4.db3";
 #endif
+
+            this.InitGrid();
+        }
+
+        private void InitGrid()
+        {
+            // Init Grid
+            var gr = CreateGraphics();
+            _dgh = new KaJourHelper.DataGridHelper(this.dataGridView1, gr);
+            _dgh.Init();
+
+            _dgh.ColumAdd("Row", "Row", "####_", "Alignment_MiddleRight", "#");
+            _dgh.ColumAdd("Table1", "Table", "JOUT_JDD__OP_", "", "");
+            _dgh.ColumAdd("Rec1", "Rec", "#########_", "Alignment_MiddleRight", "#,##0");
+            _dgh.ColumAdd("Pfeil", " => ", " => _", "", "");
+            _dgh.ColumAdd("Table2", "Table", "JOUT_JDD__OP_", "", "");
+            _dgh.ColumAdd("Rec2", "Rec", "#########_", "Alignment_MiddleRight", "#,##0");
         }
 
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
-            // Di.09.03.2021 17:20:29 -op- DataGrid
+            // Di.09.03.2021 17:20:29 -op- DataGrid, DataGridHelper.cs, StringHelper.cs
             // Mo.08.03.2021 16:42:16 -op- v:2021.03.08
             //                             V2: Count: Tables: 22, Rows: 83935, Rec/Sec: 6044,44276733292 (Microsoft Surface Book)
             //                                 Duration: 16:18:09 - 16:18:23 -> 00:00:13.8863090
@@ -157,12 +176,16 @@ namespace SqlCe2SQLite
 
             this.textBoxAction.Text = "";
             this.toolStripProgressBarTable.Value = 0;
+            // Grid-Clear
+            this.dataGridView1.Rows.Clear();
             Application.DoEvents();
 
             int countTables = 0;
             int countRows = 0;
 
             StringBuilder sb = new StringBuilder();
+
+            List<GridRecord> gridRecordList = new List<GridRecord>();
 
             // 1. Check Databases
             // 2. Check Tables in SQLite
@@ -210,6 +233,13 @@ namespace SqlCe2SQLite
                     Application.DoEvents();
 
                     sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
+
+                    // Grid-Data
+                    GridRecord gridRecord = new GridRecord();
+                    gridRecord.Row = iTable + 1;
+                    gridRecord.Name1 = tableName;
+                    gridRecord.Rec1 = tableRec1;
+                    gridRecordList.Add(gridRecord);
                 }
             }
             sb.AppendLine("   Count: Tables: " + countTables.ToString() + ", Rows: " + countRows.ToString());
@@ -250,12 +280,44 @@ namespace SqlCe2SQLite
                     Application.DoEvents();
 
                     sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
+
+                    // Grid-Data
+                    // find name1
+                    for (int i = 0; i < gridRecordList.Count; i++)
+                    {
+                        string name1 = gridRecordList[i].Name1;
+
+                        if (tableName== name1) {
+                            gridRecordList[i].Name2 = tableName;
+                            gridRecordList[i].Rec2 = tableRec1;
+                            break;  // ==================>
+                        }
+                    }
                 }
             }
             sb.AppendLine("  Count: Tables: " + countTables.ToString() + ", Rows: " + countRows.ToString());
 
             this.textBoxAction.Text = sb.ToString();
             this.toolStripProgressBarTable.Value = 100;
+
+            // Grid-Data
+            for (int i = 0; i < gridRecordList.Count; i++)
+            {
+                int newRow = this.dataGridView1.Rows.Add();
+                this.dataGridView1.Rows[newRow].Cells["Row"].Value = gridRecordList[i].Row;
+                this.dataGridView1.Rows[newRow].Cells["Table1"].Value = gridRecordList[i].Name1;
+                this.dataGridView1.Rows[newRow].Cells["Rec1"].Value = gridRecordList[i].Rec1;
+                this.dataGridView1.Rows[newRow].Cells["Table2"].Value = gridRecordList[i].Name2;
+                this.dataGridView1.Rows[newRow].Cells["Rec2"].Value = gridRecordList[i].Rec2;
+
+                bool toggle = (i % 2) == 0;
+
+                // Zeilenfinder
+                if (toggle)
+                {
+                    this.dataGridView1.Rows[newRow].DefaultCellStyle.BackColor = Color.LightCyan;
+                }
+            }
 
             return ret;
         }
@@ -859,5 +921,13 @@ namespace SqlCe2SQLite
 
             return doEvents;
         }
+    }
+
+    public class GridRecord{
+        public int Row { get; set; }
+        public string Name1 { get; set; }
+        public int Rec1 { get; set; }
+        public string Name2 { get; set; }
+        public int Rec2 { get; set; }
     }
 }

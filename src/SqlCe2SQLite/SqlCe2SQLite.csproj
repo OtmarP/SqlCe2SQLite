@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\DataGridHelper.cs" />
+    <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="SqlCe2SQLiteMain.cs">
       <SubType>Form</SubType>
     </Compile>
