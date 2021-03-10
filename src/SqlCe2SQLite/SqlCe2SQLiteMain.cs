@@ -53,16 +53,17 @@ namespace SqlCe2SQLite
             _dgh.Init();
 
             _dgh.ColumAdd("Row", "Row", "####_", "Alignment_MiddleRight", "#");
-            _dgh.ColumAdd("Table1", "Table", "JOUT_JDD__OP_", "", "");
-            _dgh.ColumAdd("Rec1", "Rec", "#########_", "Alignment_MiddleRight", "#,##0");
+            _dgh.ColumAdd("Table1", "Ce Table", "JOUT_JDD__OP_", "", "");
+            _dgh.ColumAdd("Rec1", "Ce Rec", "##########_", "Alignment_MiddleRight", "#,##0");
             _dgh.ColumAdd("Pfeil", " => ", " => _", "", "");
-            _dgh.ColumAdd("Table2", "Table", "JOUT_JDD__OP_", "", "");
-            _dgh.ColumAdd("Rec2", "Rec", "#########_", "Alignment_MiddleRight", "#,##0");
+            _dgh.ColumAdd("Table2", "Lite Table", "JOUT_JDD__OP_", "", "");
+            _dgh.ColumAdd("Rec2", "Lite Rec", "##########_", "Alignment_MiddleRight", "#,##0");
         }
 
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
             //--------------------------------- History: letzter oben
+            // Mi.10.03.2021 14:55:22 -op- DataGrid
             // Di.09.03.2021 17:20:29 -op- DataGrid, DataGridHelper.cs, StringHelper.cs
             // Mo.08.03.2021 16:42:16 -op- v:2021.03.08
             //                             V2: Count: Tables: 22, Rows: 83935, Rec/Sec: 6044,44276733292 (Microsoft Surface Book)
