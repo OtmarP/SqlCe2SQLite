@@ -380,6 +380,14 @@ namespace KaJourDAL
         // Methods
         // ******************
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="select">"SELECT "</param>
+        /// <param name="sql">" * FROM {0} ORDER BY DAT DESC, TIM DESC"</param>
+        /// <param name="maxRecords"></param>
+        /// <returns></returns>
         public string TopBuilder(string tableName, string select, string sql, int maxRecords)
         {
             // select: "SELECT "

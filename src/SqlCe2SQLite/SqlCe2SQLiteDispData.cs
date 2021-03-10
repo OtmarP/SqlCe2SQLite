@@ -69,12 +69,15 @@ namespace SqlCe2SQLite
             Application.DoEvents();
 
             int maxRows = -1;
-            try
+            if (this.checkBoxTop.Checked)
             {
-                maxRows = Convert.ToInt32(this.textBoxTop.Text);
-            }
-            catch (Exception)
-            {
+                try
+                {
+                    maxRows = Convert.ToInt32(this.textBoxTop.Text);
+                }
+                catch (Exception)
+                {
+                }
             }
 
             //int countTables = 0;
@@ -116,6 +119,9 @@ namespace SqlCe2SQLite
 
             // Display
             var sel = "SELECT * FROM " + tableName;
+            if (maxRows >= 0){
+                sel = sqCEorLITE.TopBuilder(tableName, "SELECT ", "* FROM {0}", maxRows);
+            }
             DataTable tableSelect = sqCEorLITE.Execute("SELECT", sel);
             for (int iRow = 0; iRow < tableSelect.Rows.Count; iRow++)
             {

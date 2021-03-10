@@ -31,15 +31,15 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.panelTop = new System.Windows.Forms.Panel();
-            this.radioButtonSQLCe = new System.Windows.Forms.RadioButton();
-            this.radioButtonSQLite = new System.Windows.Forms.RadioButton();
-            this.textBoxTableName = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBoxTop = new System.Windows.Forms.TextBox();
             this.buttonDisplayData = new System.Windows.Forms.Button();
+            this.textBoxTop = new System.Windows.Forms.TextBox();
+            this.textBoxTableName = new System.Windows.Forms.TextBox();
+            this.radioButtonSQLite = new System.Windows.Forms.RadioButton();
+            this.radioButtonSQLCe = new System.Windows.Forms.RadioButton();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.textBoxAction = new System.Windows.Forms.TextBox();
+            this.checkBoxTop = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -67,9 +67,9 @@
             // 
             // panelTop
             // 
+            this.panelTop.Controls.Add(this.checkBoxTop);
             this.panelTop.Controls.Add(this.buttonDisplayData);
             this.panelTop.Controls.Add(this.textBoxTop);
-            this.panelTop.Controls.Add(this.label1);
             this.panelTop.Controls.Add(this.textBoxTableName);
             this.panelTop.Controls.Add(this.radioButtonSQLite);
             this.panelTop.Controls.Add(this.radioButtonSQLCe);
@@ -79,16 +79,29 @@
             this.panelTop.Size = new System.Drawing.Size(808, 26);
             this.panelTop.TabIndex = 1;
             // 
-            // radioButtonSQLCe
+            // buttonDisplayData
             // 
-            this.radioButtonSQLCe.AutoSize = true;
-            this.radioButtonSQLCe.Location = new System.Drawing.Point(3, 3);
-            this.radioButtonSQLCe.Name = "radioButtonSQLCe";
-            this.radioButtonSQLCe.Size = new System.Drawing.Size(59, 17);
-            this.radioButtonSQLCe.TabIndex = 0;
-            this.radioButtonSQLCe.TabStop = true;
-            this.radioButtonSQLCe.Text = "SQLCe";
-            this.radioButtonSQLCe.UseVisualStyleBackColor = true;
+            this.buttonDisplayData.Location = new System.Drawing.Point(410, 0);
+            this.buttonDisplayData.Name = "buttonDisplayData";
+            this.buttonDisplayData.Size = new System.Drawing.Size(75, 23);
+            this.buttonDisplayData.TabIndex = 5;
+            this.buttonDisplayData.Text = "Display Data";
+            this.buttonDisplayData.UseVisualStyleBackColor = true;
+            this.buttonDisplayData.Click += new System.EventHandler(this.buttonDisplayData_Click);
+            // 
+            // textBoxTop
+            // 
+            this.textBoxTop.Location = new System.Drawing.Point(342, 2);
+            this.textBoxTop.Name = "textBoxTop";
+            this.textBoxTop.Size = new System.Drawing.Size(62, 20);
+            this.textBoxTop.TabIndex = 4;
+            // 
+            // textBoxTableName
+            // 
+            this.textBoxTableName.Location = new System.Drawing.Point(131, 2);
+            this.textBoxTableName.Name = "textBoxTableName";
+            this.textBoxTableName.Size = new System.Drawing.Size(151, 20);
+            this.textBoxTableName.TabIndex = 2;
             // 
             // radioButtonSQLite
             // 
@@ -101,38 +114,16 @@
             this.radioButtonSQLite.Text = "SQLite";
             this.radioButtonSQLite.UseVisualStyleBackColor = true;
             // 
-            // textBoxTableName
+            // radioButtonSQLCe
             // 
-            this.textBoxTableName.Location = new System.Drawing.Point(131, 2);
-            this.textBoxTableName.Name = "textBoxTableName";
-            this.textBoxTableName.Size = new System.Drawing.Size(151, 20);
-            this.textBoxTableName.TabIndex = 2;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(288, 5);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(32, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "TOP:";
-            // 
-            // textBoxTop
-            // 
-            this.textBoxTop.Location = new System.Drawing.Point(326, 2);
-            this.textBoxTop.Name = "textBoxTop";
-            this.textBoxTop.Size = new System.Drawing.Size(62, 20);
-            this.textBoxTop.TabIndex = 4;
-            // 
-            // buttonDisplayData
-            // 
-            this.buttonDisplayData.Location = new System.Drawing.Point(394, 0);
-            this.buttonDisplayData.Name = "buttonDisplayData";
-            this.buttonDisplayData.Size = new System.Drawing.Size(75, 23);
-            this.buttonDisplayData.TabIndex = 5;
-            this.buttonDisplayData.Text = "Display Data";
-            this.buttonDisplayData.UseVisualStyleBackColor = true;
-            this.buttonDisplayData.Click += new System.EventHandler(this.buttonDisplayData_Click);
+            this.radioButtonSQLCe.AutoSize = true;
+            this.radioButtonSQLCe.Location = new System.Drawing.Point(3, 3);
+            this.radioButtonSQLCe.Name = "radioButtonSQLCe";
+            this.radioButtonSQLCe.Size = new System.Drawing.Size(59, 17);
+            this.radioButtonSQLCe.TabIndex = 0;
+            this.radioButtonSQLCe.TabStop = true;
+            this.radioButtonSQLCe.Text = "SQLCe";
+            this.radioButtonSQLCe.UseVisualStyleBackColor = true;
             // 
             // dataGridView1
             // 
@@ -156,7 +147,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBoxAction);
             this.splitContainer1.Size = new System.Drawing.Size(420, 277);
-            this.splitContainer1.SplitterDistance = 125;
+            this.splitContainer1.SplitterDistance = 124;
             this.splitContainer1.TabIndex = 3;
             // 
             // textBoxAction
@@ -167,6 +158,16 @@
             this.textBoxAction.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxAction.Size = new System.Drawing.Size(211, 104);
             this.textBoxAction.TabIndex = 3;
+            // 
+            // checkBoxTop
+            // 
+            this.checkBoxTop.AutoSize = true;
+            this.checkBoxTop.Location = new System.Drawing.Point(288, 4);
+            this.checkBoxTop.Name = "checkBoxTop";
+            this.checkBoxTop.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxTop.TabIndex = 6;
+            this.checkBoxTop.Text = "TOP";
+            this.checkBoxTop.UseVisualStyleBackColor = true;
             // 
             // SqlCe2SQLiteDispData
             // 
@@ -201,12 +202,12 @@
         private System.Windows.Forms.Panel panelTop;
         private System.Windows.Forms.Button buttonDisplayData;
         private System.Windows.Forms.TextBox textBoxTop;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxTableName;
         private System.Windows.Forms.RadioButton radioButtonSQLite;
         private System.Windows.Forms.RadioButton radioButtonSQLCe;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TextBox textBoxAction;
+        private System.Windows.Forms.CheckBox checkBoxTop;
     }
 }
