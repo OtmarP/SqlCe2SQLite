@@ -27,6 +27,8 @@ namespace SqlCe2SQLite
 
             this.textBoxTableName.Enabled = false;
 
+            this.checkBoxTop.Checked = true;
+
             this.splitContainer1.Dock = DockStyle.Fill;
             this.dataGridView1.Dock = DockStyle.Fill;
             this.textBoxAction.Dock = DockStyle.Fill;
@@ -156,9 +158,14 @@ namespace SqlCe2SQLite
                 this.textBoxTop.Enabled = true;
             }
             else {
-                this.textBoxTop.BackColor = Color.White;
+                this.textBoxTop.BackColor = System.Drawing.SystemColors.Window;
                 this.textBoxTop.Enabled = false;
             }
+        }
+
+        private void textBoxTop_TextChanged(object sender, EventArgs e)
+        {
+            //
         }
     }
 }

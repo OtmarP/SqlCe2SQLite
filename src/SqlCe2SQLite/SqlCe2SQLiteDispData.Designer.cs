@@ -95,6 +95,7 @@
             this.textBoxTop.Name = "textBoxTop";
             this.textBoxTop.Size = new System.Drawing.Size(62, 20);
             this.textBoxTop.TabIndex = 4;
+            this.textBoxTop.TextChanged += new System.EventHandler(this.textBoxTop_TextChanged);
             // 
             // textBoxTableName
             // 
