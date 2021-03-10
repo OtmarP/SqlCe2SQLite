@@ -18,9 +18,6 @@ namespace SqlCe2SQLite
         {
             InitializeComponent();
 
-            this.Top = 50;
-            this.Left = 50;
-
             this.splitContainer1.Dock = DockStyle.Fill;
             this.textBoxAction.Dock = DockStyle.Fill;
             this.dataGridView1.Dock = DockStyle.Fill;
@@ -32,7 +29,7 @@ namespace SqlCe2SQLite
             this.textBoxTestNRecords.Text = "50";
             this.checkBoxBulkInsert.Checked = true;
 
-            this.Text = "SqlCe2SQLite v:2021.03.08";
+            this.Text = "SqlCe2SQLite v:2021.03.10";
 #if DEBUG
             this.Text += "   ***DEBUG***";
 #endif
@@ -43,6 +40,9 @@ namespace SqlCe2SQLite
 #endif
 
             this.InitGrid();
+
+            this.contextMenuStripGrid.Items.Clear();
+            this.contextMenuStripGrid.Items.Add("Display Data");
         }
 
         private void InitGrid()
@@ -52,18 +52,22 @@ namespace SqlCe2SQLite
             _dgh = new KaJourHelper.DataGridHelper(this.dataGridView1, gr);
             _dgh.Init();
 
-            _dgh.ColumAdd("Row", "Row", "####_", "Alignment_MiddleRight", "#");
-            _dgh.ColumAdd("Table1", "Ce Table", "JOUT_JDD__OP_", "", "");
-            _dgh.ColumAdd("Rec1", "Ce Rec", "##########_", "Alignment_MiddleRight", "#,##0");
-            _dgh.ColumAdd("Pfeil", " => ", " => _", "", "");
-            _dgh.ColumAdd("Table2", "Lite Table", "JOUT_JDD__OP_", "", "");
-            _dgh.ColumAdd("Rec2", "Lite Rec", "##########_", "Alignment_MiddleRight", "#,##0");
+            _dgh.ColumAdd("Row", "Row", "####_", "Alignment_MiddleRight", "#"); // 0
+            _dgh.ColumAdd("Table1", "Ce Table", "JOUT_JDD__OP_", "", "");       // 1
+            _dgh.ColumAdd("Rec1", "Ce Rec", "##########_", "Alignment_MiddleRight", "#,##0");   // 2
+            _dgh.ColumAdd("Pfeil", " => ", " => _", "", "");                    // 3
+            _dgh.ColumAdd("Table2", "Lite Table", "JOUT_JDD__OP_", "", "");     // 4
+            _dgh.ColumAdd("Rec2", "Lite Rec", "##########_", "Alignment_MiddleRight", "#,##0"); // 5
         }
 
         private void SqlCe2SQLiteMain_Load(object sender, EventArgs e)
         {
+            // Load
+            this.Top = 50;
+            this.Left = 50;
+
             //--------------------------------- History: letzter oben
-            // Mi.10.03.2021 14:55:22 -op- DataGrid
+            // Mi.10.03.2021 14:55:22 -op- DataGrid, ContextMenue-Display Data mit neuem Form, v:2021.03.10
             // Di.09.03.2021 17:20:29 -op- DataGrid, DataGridHelper.cs, StringHelper.cs
             // Mo.08.03.2021 16:42:16 -op- v:2021.03.08
             //                             V2: Count: Tables: 22, Rows: 83935, Rec/Sec: 6044,44276733292 (Microsoft Surface Book)
@@ -154,11 +158,11 @@ namespace SqlCe2SQLite
         private void buttonDispData_Click(object sender, EventArgs e)
         {
             // Disp Data
-            this.DisableEnabledControls(false);
+            //this.DisableEnabledControls(false);
 
-            var ret = this.DispTarget();
+            //var ret = this.DispTarget();
 
-            this.DisableEnabledControls(true);
+            //this.DisableEnabledControls(true);
         }
 
         private void DisableEnabledControls(bool enabled)
@@ -390,89 +394,6 @@ namespace SqlCe2SQLite
             return ret;
         }
 
-        private bool DispTarget()
-        {
-            bool ret = false;
-
-            this.textBoxAction.Text = "";
-            this.toolStripProgressBarTable.Value = 0;
-            Application.DoEvents();
-
-            int countTables = 0;
-            int countRows = 0;
-
-            StringBuilder sb = new StringBuilder();
-
-            KaJourDAL.KaJour_Global_LITE.SQLProvider = "SQLITE";
-            KaJourDAL.KaJour_Global_LITE.SQLConnStr = "Data Source='" + this.textBoxSQLite.Text + "'";
-
-            // ##############################################
-            sb.AppendLine(KaJourDAL.KaJour_Global_LITE.SQLProvider + ":");
-
-            var sqLITE = new KaJourDAL.SQL(KaJourDAL.KaJour_Global_LITE.SQLProvider, KaJourDAL.KaJour_Global_LITE.SQLConnStr);
-            DataTable tablesLITE = null;
-            try
-            {
-                sqLITE.Connect();
-                tablesLITE = sqLITE.GetTableList("", false);
-                sqLITE.DisConnect();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-                return ret;
-            }
-            if (tablesLITE != null)
-            {
-                for (int iTable = 0; iTable < tablesLITE.Rows.Count; iTable++)
-                {
-                    countTables++;
-
-                    var tableName = tablesLITE.Rows[iTable][0].ToString();
-                    sqLITE.Connect();
-                    var tableRec1 = sqLITE.GetTableRecCount(tableName);
-                    sqLITE.DisConnect();
-
-                    this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesLITE.Rows.Count;
-                    Application.DoEvents();
-
-                    sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
-
-                    //countRows += tableRec1;
-
-                    // Display
-                    var sel = "SELECT * FROM " + tableName;
-                    DataTable tableSelect = sqLITE.Execute("SELECT", sel);
-                    for (int iRow = 0; iRow < tableSelect.Rows.Count; iRow++)
-                    {
-                        countRows++;
-
-                        for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
-                        {
-                            var colVal = tableSelect.Rows[iRow][iCol];
-                            sb.Append(colVal);
-                            sb.Append(", ");
-                        }
-                        sb.AppendLine("");
-
-                        if (iRow >= 20)
-                        {
-                            break;  //====================>
-                        }
-                    }
-
-                    if (iTable >= 0)
-                    {
-                        break;  //====================>
-                    }
-                }
-            }
-
-            this.textBoxAction.Text = sb.ToString();
-            this.toolStripProgressBarTable.Value = 100;
-
-            return ret;
-        }
 
         private bool CopyDataV2(){
 
@@ -921,6 +842,75 @@ namespace SqlCe2SQLite
             // ...
 
             return doEvents;
+        }
+
+        //private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        //{
+        //    this.toolStripStatusLabel1.Text = e.RowIndex.ToString() + " " + e.ColumnIndex.ToString();
+        //}
+
+        private void contextMenuStripGrid_Opening(object sender, CancelEventArgs e)
+        {
+            if (this.dataGridView1.Rows.Count <= 0)
+            {
+                this.contextMenuStripGrid.Items[0].Text = "Display Data: nothing";
+            }
+            else
+            {
+                var valTable1 = this.dataGridView1.CurrentRow.Cells["Table1"].Value.ToString();  // Table1
+                var valTable2 = this.dataGridView1.CurrentRow.Cells["Table2"].Value.ToString();  // Table2
+                var currentCell = this.dataGridView1.CurrentCell;
+                var sqlCeOrLite = "nothing";
+                //var valTable = "";
+                if (currentCell.ColumnIndex==1) {
+                    sqlCeOrLite = "SQLCe - " + valTable1;
+                    //valTable = valTable1;
+                }
+                if (currentCell.ColumnIndex == 4)
+                {
+                    sqlCeOrLite = "SQLite - "+ valTable2;
+                    //valTable = valTable2;
+                }
+
+                this.contextMenuStripGrid.Items[0].Text = "Display Data: " + sqlCeOrLite;
+            }
+        }
+
+        private void contextMenuStripGrid_Click(object sender, EventArgs e)
+        {
+            if (this.dataGridView1.Rows.Count <= 0)
+            {
+                // "Display Data: nothing"
+            }
+            else
+            {
+                var valTable1 = this.dataGridView1.CurrentRow.Cells["Table1"].Value.ToString();  // Table1
+                var valTable2 = this.dataGridView1.CurrentRow.Cells["Table2"].Value.ToString();  // Table2
+                var currentCell = this.dataGridView1.CurrentCell;
+                var sqlCeOrLite = "nothing";
+                var valTable = "";
+                var valDB = "";
+                if (currentCell.ColumnIndex == 1)
+                {
+                    sqlCeOrLite = "SQLCE";
+                    valTable = valTable1;
+                    valDB = this.textBoxSqlCe.Text;
+                }
+                if (currentCell.ColumnIndex == 4)
+                {
+                    sqlCeOrLite = "SQLITE";
+                    valTable = valTable2;
+                    valDB = this.textBoxSQLite.Text;
+                }
+
+                //this.contextMenuStripGrid.Items[0].Text = "Display Data: " + sqlCeOrLite;
+
+                if (valTable!="") {
+                    SqlCe2SQLiteDispData sqlCe2SQLiteDispData = new SqlCe2SQLiteDispData();
+                    sqlCe2SQLiteDispData.SetData(sqlCeOrLite, valTable, valDB);
+                    sqlCe2SQLiteDispData.Show();
+                }
+            }
         }
     }
 

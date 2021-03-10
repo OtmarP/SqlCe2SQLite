@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panelTop = new System.Windows.Forms.Panel();
             this.checkBoxBulkInsert = new System.Windows.Forms.CheckBox();
             this.buttonDispData = new System.Windows.Forms.Button();
@@ -48,6 +49,7 @@
             this.textBoxAction = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.contextMenuStripGrid = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.panelTop.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -140,7 +142,7 @@
             this.buttonCopy.Name = "buttonCopy";
             this.buttonCopy.Size = new System.Drawing.Size(75, 23);
             this.buttonCopy.TabIndex = 6;
-            this.buttonCopy.Text = "Copy";
+            this.buttonCopy.Text = "Copy =>";
             this.buttonCopy.UseVisualStyleBackColor = true;
             this.buttonCopy.Click += new System.EventHandler(this.buttonCopy_Click);
             // 
@@ -249,10 +251,18 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.ContextMenuStrip = this.contextMenuStripGrid;
             this.dataGridView1.Location = new System.Drawing.Point(15, 15);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(240, 108);
             this.dataGridView1.TabIndex = 0;
+            // 
+            // contextMenuStripGrid
+            // 
+            this.contextMenuStripGrid.Name = "contextMenuStripGrid";
+            this.contextMenuStripGrid.Size = new System.Drawing.Size(181, 26);
+            this.contextMenuStripGrid.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripGrid_Opening);
+            this.contextMenuStripGrid.Click += new System.EventHandler(this.contextMenuStripGrid_Click);
             // 
             // SqlCe2SQLiteMain
             // 
@@ -302,6 +312,7 @@
         private System.Windows.Forms.CheckBox checkBoxBulkInsert;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripGrid;
     }
 }
 
