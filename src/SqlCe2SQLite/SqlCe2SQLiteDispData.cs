@@ -121,7 +121,8 @@ namespace SqlCe2SQLite
 
             // Display
             var sel = "SELECT * FROM " + tableName;
-            if (this.checkBoxTop.Checked){
+            if (this.checkBoxTop.Checked)
+            {
                 sel = sqCEorLITE.TopBuilder(tableName, "SELECT ", "* FROM {0}", maxRows);
             }
             DataTable tableSelect = sqCEorLITE.Execute("SELECT", sel);
