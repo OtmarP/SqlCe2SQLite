@@ -119,7 +119,7 @@ namespace SqlCe2SQLite
 
             // Display
             var sel = "SELECT * FROM " + tableName;
-            if (maxRows >= 0){
+            if (this.checkBoxTop.Checked){
                 sel = sqCEorLITE.TopBuilder(tableName, "SELECT ", "* FROM {0}", maxRows);
             }
             DataTable tableSelect = sqCEorLITE.Execute("SELECT", sel);
@@ -148,5 +148,17 @@ namespace SqlCe2SQLite
             return ret;
         }
 
+        private void checkBoxTop_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.checkBoxTop.Checked)
+            {
+                this.textBoxTop.BackColor = Color.LightCyan;
+                this.textBoxTop.Enabled = true;
+            }
+            else {
+                this.textBoxTop.BackColor = Color.White;
+                this.textBoxTop.Enabled = false;
+            }
+        }
     }
 }

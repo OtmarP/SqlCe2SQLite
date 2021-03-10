@@ -168,6 +168,7 @@
             this.checkBoxTop.TabIndex = 6;
             this.checkBoxTop.Text = "TOP";
             this.checkBoxTop.UseVisualStyleBackColor = true;
+            this.checkBoxTop.CheckedChanged += new System.EventHandler(this.checkBoxTop_CheckedChanged);
             // 
             // SqlCe2SQLiteDispData
             // 
