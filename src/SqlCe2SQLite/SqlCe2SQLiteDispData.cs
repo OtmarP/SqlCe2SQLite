@@ -67,7 +67,7 @@ namespace SqlCe2SQLite
 
             this.toolStripStatusLabel1.Text = "Load Data...";
             this.textBoxAction.Text = "";
-            //this.toolStripProgressBarTable.Value = 0;
+            this.toolStripProgressBar1.Value = 0;
             Application.DoEvents();
 
             int maxRows = -1;
@@ -111,9 +111,6 @@ namespace SqlCe2SQLite
             var tableRec1 = sqCEorLITE.GetTableRecCount(tableName);
             sqCEorLITE.DisConnect();
 
-            //this.toolStripProgressBarTable.Value = ((iTable + 1) * 100) / tablesLITE.Rows.Count;
-            Application.DoEvents();
-
             sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
 
             // Display
@@ -127,6 +124,13 @@ namespace SqlCe2SQLite
             {
                 countRows++;
 
+                this.toolStripProgressBar1.Value = ((iRow+1) * 100) / tableRec1;
+                this.toolStripStatusLabel1.Text = "Load Data... " + (iRow+1).ToString();
+                var doEvents = UXHelper.CalcModulo(iRow);
+                if (doEvents) {
+                    Application.DoEvents();
+                }
+
                 for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
                 {
                     var colVal = tableSelect.Rows[iRow][iCol];
@@ -138,7 +142,7 @@ namespace SqlCe2SQLite
 
             this.toolStripStatusLabel1.Text = "Load Data Ok.";
             this.textBoxAction.Text = sb.ToString();
-            //this.toolStripProgressBarTable.Value = 100;
+            this.toolStripProgressBar1.Value = 100;
 
             return ret;
         }

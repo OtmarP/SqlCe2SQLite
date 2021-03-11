@@ -737,7 +737,6 @@ namespace SqlCe2SQLite
                         }
 
                         this.toolStripStatusLabel2.Text = " " + (iTable + 1).ToString() + "/" + tablesCE.Rows.Count.ToString() + " " + tableName + " " + (iRow + 1).ToString() + "/" + tableRec1.ToString() + " ";
-
                         bool doEvents = UXHelper.CalcModulo(iRow);
                         if (doEvents)
                         {
