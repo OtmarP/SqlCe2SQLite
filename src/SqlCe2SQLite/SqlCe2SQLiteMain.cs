@@ -543,7 +543,7 @@ namespace SqlCe2SQLite
                         sqLITE.SetParameters(paramValues);
 
                         this.toolStripStatusLabel2.Text = " " + (iTable + 1).ToString() + "/" + tablesCE.Rows.Count.ToString() + " " + tableName + " " + (iRow + 1).ToString() + "/" + tableRec1.ToString() + " ";
-                        bool doEvents = CalcModulo(iRow);
+                        bool doEvents = UXHelper.CalcModulo(iRow);
                         if (doEvents)
                         {
                             Application.DoEvents();
@@ -738,7 +738,7 @@ namespace SqlCe2SQLite
 
                         this.toolStripStatusLabel2.Text = " " + (iTable + 1).ToString() + "/" + tablesCE.Rows.Count.ToString() + " " + tableName + " " + (iRow + 1).ToString() + "/" + tableRec1.ToString() + " ";
 
-                        bool doEvents = CalcModulo(iRow);
+                        bool doEvents = UXHelper.CalcModulo(iRow);
                         if (doEvents)
                         {
                             Application.DoEvents();
@@ -793,55 +793,6 @@ namespace SqlCe2SQLite
             this.toolStripStatusLabel2.Text = " Fertig: " + timings;
 
             return ret;
-        }
-
-        private bool CalcModulo(int iRow)
-        {
-            bool doEvents = false;
-
-            // - 1,2,3,4,5,6,7,8,9,10
-            // - 20,30,40,50,60,70,80,90,100
-            // - 200,300,400,500,600,700,800,900,1000
-            // - 2000,3000,4000,5000,6000,7000,8000,9000,10000
-            // - 20000,30000,40000,50000,60000,70000, ...
-            var iRowP1 = iRow + 1;
-            if (iRowP1 <= 10)
-            {
-                doEvents = true;
-            }
-            else if (iRowP1 <= 100)
-            {
-                // mod 10
-                if ((iRowP1 % 10) == 0) { doEvents = true; }
-            }
-            else if (iRowP1 <= 1000)
-            {
-                // mod 100
-                if ((iRowP1 % 100) == 0) { doEvents = true; }
-            }
-            else if (iRowP1 <= 10000)
-            {
-                // mod 1000
-                if ((iRowP1 % 1000) == 0) { doEvents = true; }
-            }
-            else if (iRowP1 <= 100000)
-            {
-                // mod 10000
-                if ((iRowP1 % 10000) == 0) { doEvents = true; }
-            }
-            else if (iRowP1 <= 1000000)
-            {
-                // mod 100000
-                if ((iRowP1 % 100000) == 0) { doEvents = true; }
-            }
-            else if (iRowP1 <= 10000000)
-            {
-                // mod 1000000
-                if ((iRowP1 % 1000000) == 0) { doEvents = true; }
-            }
-            // ...
-
-            return doEvents;
         }
 
         //private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)

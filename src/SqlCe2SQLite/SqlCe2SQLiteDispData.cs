@@ -116,8 +116,6 @@ namespace SqlCe2SQLite
 
             sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
 
-            //countRows += tableRec1;
-
             // Display
             var sel = "SELECT * FROM " + tableName;
             if (this.checkBoxTop.Checked)

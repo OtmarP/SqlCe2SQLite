@@ -73,6 +73,7 @@
     <Compile Include="SqlHelper\KaJour_Global.cs" />
     <Compile Include="SqlHelper\SQL.cs" />
     <Compile Include="SqlHelper\SQLError.cs" />
+    <Compile Include="UXHelper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
