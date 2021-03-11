@@ -7,7 +7,7 @@ Copy Data from a SqlCE-Database (.sdf) to a SQLite-Database (.db3)
 * both Tables (Structure) must be exist.
 
 ## Timings (on Microsoft Surface Book i7, 16GB, SSD):
-### V2: mit Bulk insert
+### V2: with Bulk insert
 * Count: Tables: 22, Rows: 83935, Rec/Sec: 6044,44
 * Duration: 00:00:13.88
 
