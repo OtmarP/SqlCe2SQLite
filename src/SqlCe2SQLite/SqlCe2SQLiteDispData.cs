@@ -82,7 +82,6 @@ namespace SqlCe2SQLite
                 }
             }
 
-            //int countTables = 0;
             int countRows = 0;
 
             StringBuilder sb = new StringBuilder();
