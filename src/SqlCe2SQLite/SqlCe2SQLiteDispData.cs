@@ -137,11 +137,6 @@ namespace SqlCe2SQLite
                     sb.Append(", ");
                 }
                 sb.AppendLine("");
-
-                if (iRow >= maxRows)
-                {
-                    break;  //====================>
-                }
             }
 
             this.toolStripStatusLabel1.Text = "Load Data Ok.";
