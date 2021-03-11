@@ -10,6 +10,11 @@ namespace OpSoftware.OpLib
 {
     public static class UXHelper
     {
+        /// <summary>
+        /// CalcModulo (0,1,2,3,...)
+        /// </summary>
+        /// <param name="iRow">Zero-Based</param>
+        /// <returns>bool doEvents</returns>
         public static bool CalcModulo(int iRow)
         {
             bool doEvents = false;
