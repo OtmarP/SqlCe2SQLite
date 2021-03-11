@@ -41,8 +41,10 @@ namespace SqlCe2SQLite
             this.Left = 150;
         }
 
-        public void SetData(string sqlCeOrSQLite, string tableName, string dBName) {
-            if (sqlCeOrSQLite== "SQLCE") {
+        public void SetData(string sqlCeOrSQLite, string tableName, string dBName)
+        {
+            if (sqlCeOrSQLite == "SQLCE")
+            {
                 this.radioButtonSQLCe.Checked = true;
                 _SQLProvider = sqlCeOrSQLite;
             }
@@ -124,10 +126,11 @@ namespace SqlCe2SQLite
             {
                 countRows++;
 
-                this.toolStripProgressBar1.Value = ((iRow+1) * 100) / tableRec1;
-                this.toolStripStatusLabel1.Text = "Load Data... " + (iRow+1).ToString();
+                this.toolStripProgressBar1.Value = ((iRow + 1) * 100) / tableRec1;
+                this.toolStripStatusLabel1.Text = "Load Data... " + (iRow + 1).ToString();
                 var doEvents = UXHelper.CalcModulo(iRow);
-                if (doEvents) {
+                if (doEvents)
+                {
                     Application.DoEvents();
                 }
 
@@ -154,15 +157,11 @@ namespace SqlCe2SQLite
                 this.textBoxTop.BackColor = Color.LightCyan;
                 this.textBoxTop.Enabled = true;
             }
-            else {
+            else
+            {
                 this.textBoxTop.BackColor = System.Drawing.SystemColors.Window;
                 this.textBoxTop.Enabled = false;
             }
-        }
-
-        private void textBoxTop_TextChanged(object sender, EventArgs e)
-        {
-            //
         }
     }
 }

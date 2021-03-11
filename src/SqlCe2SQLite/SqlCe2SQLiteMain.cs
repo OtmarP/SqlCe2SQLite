@@ -128,7 +128,8 @@ namespace SqlCe2SQLite
             {
                 var ret = this.CopyDataV2();
             }
-            else {
+            else
+            {
                 var ret = this.CopyData();
             }
 
@@ -292,7 +293,8 @@ namespace SqlCe2SQLite
                     {
                         string name1 = gridRecordList[i].Name1;
 
-                        if (tableName== name1) {
+                        if (tableName == name1)
+                        {
                             gridRecordList[i].Name2 = tableName;
                             gridRecordList[i].Rec2 = tableRec1;
                             break;  // ==================>
@@ -395,7 +397,8 @@ namespace SqlCe2SQLite
         }
 
 
-        private bool CopyDataV2(){
+        private bool CopyDataV2()
+        {
 
             bool ret = false;
 
@@ -457,8 +460,10 @@ namespace SqlCe2SQLite
                 MessageBox.Show("Error: " + ex.Message);
                 return ret;
             }
-            if (tablesCE != null){
-                for (int iTable = 0; iTable < tablesCE.Rows.Count; iTable++){
+            if (tablesCE != null)
+            {
+                for (int iTable = 0; iTable < tablesCE.Rows.Count; iTable++)
+                {
                     countTables++;
 
                     var tableName = tablesCE.Rows[iTable][0].ToString();
@@ -496,18 +501,21 @@ namespace SqlCe2SQLite
                     sqLITE.BeginTransaction();
 
                     var tableSelect = sqlCe.Execute("SELECT", "SELECT * FROM " + tableName);
-                    for (int iRow = 0; iRow < tableSelect.Rows.Count; iRow++){
+                    for (int iRow = 0; iRow < tableSelect.Rows.Count; iRow++)
+                    {
                         countRows++;
 
                         // Parameter
                         //par = sqlCe.InitParameterList();
-                        if (!paraOk){
+                        if (!paraOk)
+                        {
                             // Parameter
                             List<string> paramList = new List<string>();
 
                             sqlFieldList = "";
                             sqlValueList = "";
-                            for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++){
+                            for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
+                            {
                                 var colVal = tableSelect.Rows[iRow][iCol];
                                 var colName = tableSelect.Columns[iCol].ColumnName;
 
@@ -533,7 +541,8 @@ namespace SqlCe2SQLite
                         }
 
                         List<object> paramValues = new List<object>();
-                        for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++){
+                        for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
+                        {
                             var colVal = tableSelect.Rows[iRow][iCol];
                             var colName = tableSelect.Columns[iCol].ColumnName;
 
@@ -812,13 +821,14 @@ namespace SqlCe2SQLite
                 var currentCell = this.dataGridView1.CurrentCell;
                 var sqlCeOrLite = "nothing";
                 //var valTable = "";
-                if (currentCell.ColumnIndex==1) {
+                if (currentCell.ColumnIndex == 1)
+                {
                     sqlCeOrLite = "SQLCe - " + valTable1;
                     //valTable = valTable1;
                 }
                 if (currentCell.ColumnIndex == 4)
                 {
-                    sqlCeOrLite = "SQLite - "+ valTable2;
+                    sqlCeOrLite = "SQLite - " + valTable2;
                     //valTable = valTable2;
                 }
 
@@ -855,7 +865,8 @@ namespace SqlCe2SQLite
 
                 //this.contextMenuStripGrid.Items[0].Text = "Display Data: " + sqlCeOrLite;
 
-                if (valTable!="") {
+                if (valTable != "")
+                {
                     SqlCe2SQLiteDispData sqlCe2SQLiteDispData = new SqlCe2SQLiteDispData();
                     sqlCe2SQLiteDispData.SetData(sqlCeOrLite, valTable, valDB);
                     sqlCe2SQLiteDispData.Show();
@@ -864,7 +875,8 @@ namespace SqlCe2SQLite
         }
     }
 
-    public class GridRecord{
+    public class GridRecord
+    {
         public int Row { get; set; }
         public string Name1 { get; set; }
         public int Rec1 { get; set; }
