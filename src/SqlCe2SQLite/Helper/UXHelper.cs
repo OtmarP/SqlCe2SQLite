@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SqlCe2SQLite
+// OpSoftware.OpTools.UXHelper
+// OpSoftware.OpLib
+namespace OpSoftware.OpLib
 {
     public static class UXHelper
     {
