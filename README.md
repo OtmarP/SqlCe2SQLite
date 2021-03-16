@@ -3,8 +3,8 @@
 Copy Data from a SqlCE-Database (.sdf) to a SQLite-Database (.db3)
 
 ## Info:
-* both Databases must be exist.
-* both Tables (Structure) must be exist.
+* SqlCE-Databases must be exist, SQLite-Database will be created.
+* If no Tables (Structure) in SQLite-Database, it will be created.
 
 ![](./img/Bild_20210311_120741_001.png)
 

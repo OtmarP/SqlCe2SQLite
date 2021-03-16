@@ -30,7 +30,7 @@ namespace SqlCe2SQLite
             this.textBoxTestNRecords.Text = "50";
             this.checkBoxBulkInsert.Checked = true;
 
-            this.Text = "SqlCe2SQLite v:2021.03.10";
+            this.Text = "SqlCe2SQLite v:2021.03.16";
 #if DEBUG
             this.Text += "   ***DEBUG***";
 #endif
@@ -68,6 +68,7 @@ namespace SqlCe2SQLite
             this.Left = 50;
 
             //--------------------------------- History: letzter oben
+            // Di.16.03.2021 16:09:38 -op- mit Create Table
             // Mi.10.03.2021 14:55:22 -op- DataGrid, ContextMenue-Display Data mit neuem Form, v:2021.03.10
             // Di.09.03.2021 17:20:29 -op- DataGrid, DataGridHelper.cs, StringHelper.cs
             // Mo.08.03.2021 16:42:16 -op- v:2021.03.08
@@ -444,7 +445,7 @@ namespace SqlCe2SQLite
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: SQLITE: Connect, DisConnect - " + ex.Message);
                 return ret;
             }
 
@@ -458,7 +459,7 @@ namespace SqlCe2SQLite
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: SQLCE: GetTableList - " + ex.Message);
                 return ret;
             }
             if (tablesCE != null)
@@ -478,9 +479,22 @@ namespace SqlCe2SQLite
 
                     sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
 
+                    // Check if Table exists, Create Table
+                    bool sqliteCheckCreateTable = this.CreateSQLiteTable(tableName, sqlCe, sqLITE);
+
                     // delete SQLite
                     var del = sqLITE.DeleteBuilder(tableName);
                     var retDel = sqLITE.ExecuteNonQuery("DELETE", del);
+                    var exc = sqLITE.GetException();
+                    if (exc != null) {
+                        MessageBox.Show("Error: SQLITE: DELETE - " + exc.Message);
+                        sb.AppendLine("--------------------");
+                        sb.AppendLine("Error: SQLITE: DELETE - " + exc.Message);
+                        sb.AppendLine("--------------------");
+
+                        error = true;
+                        break;  //=================>
+                    }
 
                     bool paraOk = false;
                     //var par = sqlCe.InitParameterList();
@@ -573,12 +587,12 @@ namespace SqlCe2SQLite
 
                         // Insert
                         var retIns = sqLITE.ExecuteNonQuery("INSERT");
-                        var exc = sqLITE.GetException();
+                        exc = sqLITE.GetException();
                         if (exc != null)
                         {
-                            MessageBox.Show("Error:" + exc.Message);
+                            MessageBox.Show("Error: SQLITE: INSERT - " + exc.Message);
                             sb.AppendLine("--------------------");
-                            sb.AppendLine("Error:" + exc.Message);
+                            sb.AppendLine("Error: SQLITE: INSERT - " + exc.Message);
                             sb.AppendLine("--------------------");
 
                             error = true;
@@ -608,6 +622,106 @@ namespace SqlCe2SQLite
             this.textBoxAction.Text = sb.ToString();
 
             this.toolStripStatusLabel2.Text = " Fertig: " + timings;
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public bool CreateSQLiteTable(string tableName, KaJourDAL.SQL sqlCe, KaJourDAL.SQL sqLITE) {
+            bool ret = false;
+
+            var tableExists = sqLITE.TableExists(tableName);
+            ret = tableExists;
+            if (!tableExists)
+            {
+                // SELECT * FROM INFORMATION_SCHEMA.COLUMNS order by TABLE_NAME, ORDINAL_POSITION
+                // SELECT * FROM INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='adatcjou' order by TABLE_NAME, ORDINAL_POSITION
+                var sel = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='" + tableName + "' order by TABLE_NAME, ORDINAL_POSITION";
+                var colList = sqlCe.Execute("SELECT", sel);
+
+                string sqlColList = "";
+                for (int i = 0; i < colList.Rows.Count; i++)
+                {
+                    var colName = colList.Rows[i]["COLUMN_NAME"].ToString();
+                    var colType = colList.Rows[i]["DATA_TYPE"].ToString();
+                    var colCollate = "";
+
+                    // Lite
+                    // [C001] integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
+                    // Ce
+                    // [C001] int NOT NULL IDENTITY(1,1) PRIMARY KEY, 
+                    // AUTOINC_MIN	AUTOINC_MAX	AUTOINC_NEXT	AUTOINC_SEED	AUTOINC_INCREMENT
+                    // -2147483648	2147483647	2	1	1
+                    var colIdent = "";
+                    var ColPK = "";
+                    if (colList.Rows[i]["AUTOINC_SEED"] != System.DBNull.Value) {
+                        //var colAutoSeed = colList.Rows[i]["AUTOINC_SEED"];
+                        //var colAutoInc = colList.Rows[i]["AUTOINC_INCREMENT"];
+                        colIdent = " PRIMARY KEY AUTOINCREMENT ";
+
+                        if (colType == "int") { colType = "integer"; }
+                    }
+                    //if (colList.Rows[i]["AUTOINC_INCREMENT"] != System.DBNull.Value)
+                    //{
+                    //    var colAutoInc = colList.Rows[i]["AUTOINC_INCREMENT"];
+                    //}
+
+                    if (colType == "nvarchar" || colType == "nchar")
+                    {
+                        //   [CC1] nvarchar(4) NULL COLLATE NOCASE
+                        //, [CCHINWEIS] nvarchar(30) NULL COLLATE NOCASE
+                        // [CNChar-10] nchar(10), 
+                        var colMaxLen = colList.Rows[i]["CHARACTER_MAXIMUM_LENGTH"];
+
+                        colType += "(" + colMaxLen.ToString() + ")";
+
+                        colCollate = " COLLATE NOCASE ";
+                    }
+                    if (colType == "binary") {
+                        // [CBin-50] binary(50), 
+                        var colMaxLen = colList.Rows[i]["CHARACTER_MAXIMUM_LENGTH"];
+
+                        colType += "(" + colMaxLen.ToString() + ")";
+                    }
+                    if (colType == "binary") {
+                        // [CVarBin-50] varbinary(50)
+                        var colMaxLen = colList.Rows[i]["CHARACTER_MAXIMUM_LENGTH"];
+
+                        colType += "(" + colMaxLen.ToString() + ")";
+                    }
+                    if (colType == "numeric")
+                    {
+                        // , [LFIX] numeric(15,5) NULL
+                        // , [JBETRAG] numeric(18,2) NULL
+                        var colNumPrec = colList.Rows[i]["NUMERIC_PRECISION"];   // NUMERIC_PRECISION 18
+                        var colNumScale = colList.Rows[i]["NUMERIC_SCALE"];       // NUMERIC_SCALE 2
+
+                        colType += "(" + colNumPrec.ToString() + "," + colNumScale.ToString() + ")";
+                    }
+
+                    var colIsNull = colList.Rows[i]["IS_NULLABLE"].ToString(); // "YES", "NO"
+
+                    //
+                    if (sqlColList != "") { sqlColList += " , "; }
+                    sqlColList += " [" + colName + "] " + colType + " ";
+                    // [CRowVersion] rowversion NOT NULL, 
+                    if (colIsNull == "YES") { sqlColList += " NULL "; }
+                    if (colIsNull == "NO") { sqlColList += " NOT NULL "; }
+                    sqlColList += colIdent;
+                    sqlColList += ColPK;
+                    sqlColList += colCollate;
+                }
+
+                // Create Table
+                string crTab = "CREATE TABLE [" + tableName + "] ( " + sqlColList + " ) ";
+                var create = sqLITE.ExecuteNonQuery("CREATE TABLE", crTab);
+
+                ret = true;
+            }
 
             return ret;
         }
@@ -690,6 +804,9 @@ namespace SqlCe2SQLite
                     Application.DoEvents();
 
                     sb.AppendLine("  " + tableName + "   Rec:" + tableRec1.ToString());
+
+                    // Check if Table exists, Create Table
+                    bool sqliteCheckCreateTable = this.CreateSQLiteTable(tableName, sqlCe, sqLITE);
 
                     // delete SQLite
                     var del = sqLITE.DeleteBuilder(tableName);
