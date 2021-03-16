@@ -1,4 +1,5 @@
-﻿using OpSoftware.OpLib;
+﻿using KaJourHelper;
+using OpSoftware.OpLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +16,8 @@ namespace SqlCe2SQLite
     {
         private string _SQLProvider;
         private string _SQLDB;
+
+        DataGridHelper _dgh;
 
         public SqlCe2SQLiteDispData()
         {
@@ -71,6 +74,9 @@ namespace SqlCe2SQLite
             this.toolStripStatusLabel1.Text = "Load Data...";
             this.textBoxAction.Text = "";
             this.toolStripProgressBar1.Value = 0;
+            // Clear Grid
+            this.dataGridView1.Rows.Clear();
+            this.dataGridView1.Columns.Clear();
             Application.DoEvents();
 
             int maxRows = -1;
@@ -123,6 +129,19 @@ namespace SqlCe2SQLite
                 sel = sqCEorLITE.TopBuilder(tableName, "SELECT ", "* FROM {0}", maxRows);
             }
             DataTable tableSelect = sqCEorLITE.Execute("SELECT", sel);
+
+            // Init Grid
+            var gr = CreateGraphics();
+            _dgh = new DataGridHelper(this.dataGridView1, gr);
+            _dgh.Init();
+            //_dgh.ColumAdd("", "", "__", "", "");
+            _dgh.ColumAdd("Row", "Row", "#####_", "Alignment_MiddleRight", "#"); // 0
+            for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
+            {
+                var colName = tableSelect.Columns[iCol].ColumnName;
+                _dgh.ColumAdd(colName, colName, colName + "__", "", "");
+            }
+
             for (int iRow = 0; iRow < tableSelect.Rows.Count; iRow++)
             {
                 countRows++;
@@ -135,11 +154,18 @@ namespace SqlCe2SQLite
                     Application.DoEvents();
                 }
 
+                // Grid-Data
+                int newRow = this.dataGridView1.Rows.Add();
+                this.dataGridView1.Rows[newRow].Cells["Row"].Value = newRow + 1;
                 for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
                 {
                     var colVal = tableSelect.Rows[iRow][iCol];
                     sb.Append(colVal);
                     sb.Append(", ");
+
+                    // Grid-Data
+                    var colName = tableSelect.Columns[iCol].ColumnName;
+                    this.dataGridView1.Rows[newRow].Cells[colName].Value = colVal;
                 }
                 sb.AppendLine("");
             }

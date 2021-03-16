@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 // OpSoftware.OpTools.StringHelper
+// OpSoftware.OpLib
 namespace KaJourHelper
 {
     public static class StringHelper

@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 
 // OpSoftware.OpTools.DataGridHelper
+// OpSoftware.OpLib
 namespace KaJourHelper
 {
     public class DataGridHelper
@@ -16,7 +17,7 @@ namespace KaJourHelper
         /// <summary>
         /// _dgh = new DataGridHelper()
         /// </summary>
-        /// <param name="grid"></param>
+        /// <param name="grid">DataGridView</param>
         /// <param name="gr">var gr = CreateGraphics()</param>
         public DataGridHelper(DataGridView grid, Graphics gr)
         {
