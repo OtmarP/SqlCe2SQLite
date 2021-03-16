@@ -18,6 +18,7 @@ namespace SqlCe2SQLite
         private string _SQLDB;
 
         DataGridHelper _dgh;
+        bool _gridColOk;
 
         public SqlCe2SQLiteDispData()
         {
@@ -43,6 +44,8 @@ namespace SqlCe2SQLite
             // Load
             this.Top = 150;
             this.Left = 150;
+
+            _gridColOk = false;
         }
 
         public void SetData(string sqlCeOrSQLite, string tableName, string dBName)
@@ -76,7 +79,9 @@ namespace SqlCe2SQLite
             this.toolStripProgressBar1.Value = 0;
             // Clear Grid
             this.dataGridView1.Rows.Clear();
-            this.dataGridView1.Columns.Clear();
+            if (!_gridColOk) {
+                this.dataGridView1.Columns.Clear();
+            }
             Application.DoEvents();
 
             int maxRows = -1;
@@ -130,16 +135,20 @@ namespace SqlCe2SQLite
             }
             DataTable tableSelect = sqCEorLITE.Execute("SELECT", sel);
 
-            // Init Grid
-            var gr = CreateGraphics();
-            _dgh = new DataGridHelper(this.dataGridView1, gr);
-            _dgh.Init();
-            //_dgh.ColumAdd("", "", "__", "", "");
-            _dgh.ColumAdd("Row", "Row", "#####_", "Alignment_MiddleRight", "#"); // 0
-            for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
-            {
-                var colName = tableSelect.Columns[iCol].ColumnName;
-                _dgh.ColumAdd(colName, colName, colName + "__", "", "");
+            if (!_gridColOk) {
+                // Init Grid
+                var gr = CreateGraphics();
+                _dgh = new DataGridHelper(this.dataGridView1, gr);
+                _dgh.Init();
+                //_dgh.ColumAdd("", "", "__", "", "");
+                _dgh.ColumAdd("_Row_", "#", "#####_", "Alignment_MiddleRight", "#"); // 0
+                for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
+                {
+                    var colName = tableSelect.Columns[iCol].ColumnName;
+                    _dgh.ColumAdd(colName, colName, colName + "__", "", "");
+                }
+
+                _gridColOk = true;
             }
 
             for (int iRow = 0; iRow < tableSelect.Rows.Count; iRow++)
@@ -156,7 +165,7 @@ namespace SqlCe2SQLite
 
                 // Grid-Data
                 int newRow = this.dataGridView1.Rows.Add();
-                this.dataGridView1.Rows[newRow].Cells["Row"].Value = newRow + 1;
+                this.dataGridView1.Rows[newRow].Cells["_Row_"].Value = newRow + 1;
                 for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
                 {
                     var colVal = tableSelect.Rows[iRow][iCol];
