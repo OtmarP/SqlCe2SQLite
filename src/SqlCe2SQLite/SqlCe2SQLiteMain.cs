@@ -71,6 +71,7 @@ namespace SqlCe2SQLite
             this.Left = 50;
 
             //--------------------------------- History: letzter oben
+            // Mi.17.03.2021 17:46:41 -op- .\DATA\TEST4.sdf
             // Mi.17.03.2021 15:12:34 -op- SQLite: Probleme mit Parameter und ColName CNum-18-2, CNum_18_2 geht
             // Di.16.03.2021 16:09:38 -op- mit Create Table
             // Mi.10.03.2021 14:55:22 -op- DataGrid, ContextMenue-Display Data mit neuem Form, v:2021.03.10

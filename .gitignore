@@ -3,6 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+## Remarks: -op-
+
 # User-specific files
 *.rsuser
 *.suo
@@ -102,7 +104,7 @@ ipch/
 *.ncb
 *.opendb
 *.opensdf
-*.sdf
+### *.sdf   ## -op-
 *.cachefile
 *.VC.db
 *.VC.VC.opendb
