@@ -30,14 +30,17 @@ namespace SqlCe2SQLite
             this.textBoxTestNRecords.Text = "50";
             this.checkBoxBulkInsert.Checked = true;
 
-            this.Text = "SqlCe2SQLite v:2021.03.16";
+            this.Text = "SqlCe2SQLite v:2021.03.17";
 #if DEBUG
             this.Text += "   ***DEBUG***";
 #endif
 
 #if DEBUG
-            this.textBoxSqlCe.Text = @"C:\temp\KaJour\Prod\Prod2\KAJOUR4.sdf";
+            this.textBoxSqlCe.Text =  @"C:\temp\KaJour\Prod\Prod2\KAJOUR4.sdf";
             this.textBoxSQLite.Text = @"C:\temp\KaJour\Prod\Prod2\KAJOUR4.db3";
+
+            this.textBoxSqlCe.Text =  @"C:\temp\KaJour\TestDATA\KAJOUR4.sdf";
+            this.textBoxSQLite.Text = @"C:\temp\KaJour\TestDATA\KAJOUR4.db3";
 #endif
 
             this.InitGrid();
@@ -68,6 +71,7 @@ namespace SqlCe2SQLite
             this.Left = 50;
 
             //--------------------------------- History: letzter oben
+            // Mi.17.03.2021 15:12:34 -op- SQLite: Probleme mit Parameter und ColName CNum-18-2, CNum_18_2 geht
             // Di.16.03.2021 16:09:38 -op- mit Create Table
             // Mi.10.03.2021 14:55:22 -op- DataGrid, ContextMenue-Display Data mit neuem Form, v:2021.03.10
             // Di.09.03.2021 17:20:29 -op- DataGrid, DataGridHelper.cs, StringHelper.cs
@@ -601,6 +605,7 @@ namespace SqlCe2SQLite
                     }
                     if (error)
                     {
+                        sqLITE.EndTransaction();
                         break;  //=================>
                     }
 
@@ -839,7 +844,7 @@ namespace SqlCe2SQLite
 
                                 // (Fld1) values (@Fld1)
                                 if (sqlFieldList != "") { sqlFieldList += ","; }
-                                sqlFieldList += " " + colName;
+                                sqlFieldList += " [" + colName + "]";
 
                                 if (sqlValueList != "") { sqlValueList += ","; }
                                 sqlValueList += " @" + colName;
@@ -934,20 +939,23 @@ namespace SqlCe2SQLite
             }
             else
             {
-                var valTable1 = this.dataGridView1.CurrentRow.Cells["Table1"].Value.ToString();  // Table1
-                var valTable2 = this.dataGridView1.CurrentRow.Cells["Table2"].Value.ToString();  // Table2
                 var currentCell = this.dataGridView1.CurrentCell;
                 var sqlCeOrLite = "nothing";
                 //var valTable = "";
                 if (currentCell.ColumnIndex == 1)
                 {
+                    var valTable1 = this.dataGridView1.CurrentRow.Cells["Table1"].Value.ToString();  // Table1
                     sqlCeOrLite = "SQLCe - " + valTable1;
                     //valTable = valTable1;
                 }
                 if (currentCell.ColumnIndex == 4)
                 {
-                    sqlCeOrLite = "SQLite - " + valTable2;
-                    //valTable = valTable2;
+                    var x = this.dataGridView1.CurrentRow.Cells["Table2"].Value;
+                    if (x!=null) {
+                        var valTable2 = this.dataGridView1.CurrentRow.Cells["Table2"].Value.ToString();  // Table2
+                        sqlCeOrLite = "SQLite - " + valTable2;
+                        //valTable = valTable2;
+                    }
                 }
 
                 this.contextMenuStripGrid.Items[0].Text = "Display Data: " + sqlCeOrLite;
@@ -962,23 +970,26 @@ namespace SqlCe2SQLite
             }
             else
             {
-                var valTable1 = this.dataGridView1.CurrentRow.Cells["Table1"].Value.ToString();  // Table1
-                var valTable2 = this.dataGridView1.CurrentRow.Cells["Table2"].Value.ToString();  // Table2
                 var currentCell = this.dataGridView1.CurrentCell;
                 var sqlCeOrLite = "nothing";
                 var valTable = "";
                 var valDB = "";
                 if (currentCell.ColumnIndex == 1)
                 {
+                    var valTable1 = this.dataGridView1.CurrentRow.Cells["Table1"].Value.ToString();  // Table1
                     sqlCeOrLite = "SQLCE";
                     valTable = valTable1;
                     valDB = this.textBoxSqlCe.Text;
                 }
                 if (currentCell.ColumnIndex == 4)
                 {
-                    sqlCeOrLite = "SQLITE";
-                    valTable = valTable2;
-                    valDB = this.textBoxSQLite.Text;
+                    var x = this.dataGridView1.CurrentRow.Cells["Table2"].Value;
+                    if (x!=null){
+                        var valTable2 = this.dataGridView1.CurrentRow.Cells["Table2"].Value.ToString();  // Table2
+                        sqlCeOrLite = "SQLITE";
+                        valTable = valTable2;
+                        valDB = this.textBoxSQLite.Text;
+                    }
                 }
 
                 //this.contextMenuStripGrid.Items[0].Text = "Display Data: " + sqlCeOrLite;
