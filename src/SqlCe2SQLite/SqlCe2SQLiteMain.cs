@@ -30,7 +30,7 @@ namespace SqlCe2SQLite
             this.textBoxTestNRecords.Text = "50";
             this.checkBoxBulkInsert.Checked = true;
 
-            this.Text = "SqlCe2SQLite v:2021.03.17";
+            this.Text = "SqlCe2SQLite v:2021.03.19";
 #if DEBUG
             this.Text += "   ***DEBUG***";
 #endif
@@ -71,6 +71,7 @@ namespace SqlCe2SQLite
             this.Left = 50;
 
             //--------------------------------- History: letzter oben
+            // Fr.19.03.2021 17:54:08 -op- Display Data richtig anzeigen "0000, Text, 0"
             // Mi.17.03.2021 17:46:41 -op- .\DATA\TEST4.sdf
             // Mi.17.03.2021 15:12:34 -op- SQLite: Probleme mit Parameter und ColName CNum-18-2, CNum_18_2 geht
             // Di.16.03.2021 16:09:38 -op- mit Create Table

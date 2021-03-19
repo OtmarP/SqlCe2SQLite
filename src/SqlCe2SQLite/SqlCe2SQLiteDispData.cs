@@ -99,6 +99,7 @@ namespace SqlCe2SQLite
             int countRows = 0;
 
             StringBuilder sb = new StringBuilder();
+            StringBuilder sl = new StringBuilder();
 
             KaJourDAL.KaJour_Global_LITE.SQLProvider = _SQLProvider;
             KaJourDAL.KaJour_Global_LITE.SQLConnStr = "Data Source='" + _SQLDB + "'";
@@ -163,20 +164,23 @@ namespace SqlCe2SQLite
                     Application.DoEvents();
                 }
 
+                sl.Length = 0;
+
                 // Grid-Data
                 int newRow = this.dataGridView1.Rows.Add();
                 this.dataGridView1.Rows[newRow].Cells["_Row_"].Value = newRow + 1;
                 for (int iCol = 0; iCol < tableSelect.Columns.Count; iCol++)
                 {
                     var colVal = tableSelect.Rows[iRow][iCol];
-                    sb.Append(colVal);
-                    sb.Append(", ");
+                    if (sl.Length != 0) { sl.Append(", "); }
+                    sl.Append(colVal);
 
                     // Grid-Data
                     var colName = tableSelect.Columns[iCol].ColumnName;
                     this.dataGridView1.Rows[newRow].Cells[colName].Value = colVal;
                 }
-                sb.AppendLine("");
+                sl.AppendLine("");
+                sb.Append(sl);
             }
 
             this.toolStripStatusLabel1.Text = "Load Data Ok.";
