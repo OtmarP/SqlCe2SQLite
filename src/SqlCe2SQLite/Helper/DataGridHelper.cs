@@ -95,7 +95,8 @@ namespace KaJourHelper
         /// <param name="headerText"></param>
         /// <param name="visible"></param>
         /// <returns></returns>
-        public DataGridView ColumAdd(string name, string headerText, bool visible){
+        public DataGridView ColumAdd(string name, string headerText, bool visible)
+        {
             _grid.Columns.Add(name, headerText);
             _grid.Columns[name].Visible = visible;
 
@@ -269,7 +270,7 @@ namespace KaJourHelper
 
                 //decimal.TryParse()
                 decimal betr = 0;
-                string error = "";
+                //string error = "";
                 //try
                 //{
                 //    betr = Convert.ToDecimal(value);
@@ -277,7 +278,8 @@ namespace KaJourHelper
                 //}
                 ////catch (Exception ex) { error = ex.Message; }
                 //finally { }
-                if (value != null) {
+                if (value != null)
+                {
                     betr = KaJourHelper.StringHelper.StringToNumber(value.ToString());
                 }
                 sum = sum + betr;
@@ -290,175 +292,175 @@ namespace KaJourHelper
     }
 
     //public class DataGridSelection {
-        //DataGridViewSelectedCellCollection _selectedCells;
+    //DataGridViewSelectedCellCollection _selectedCells;
 
-        //public DataGridSelection()
-        //{
-        //    //_selectedCells = selectedCells;
-        //}
+    //public DataGridSelection()
+    //{
+    //    //_selectedCells = selectedCells;
+    //}
 
-        ///// <summary>
-        ///// Summe | Datums-Differenz in Tagen
-        ///// </summary>
-        ///// <returns></returns>
-        //public string GetCellSumOrDateDiff(DataGridViewSelectedCellCollection selectedCells, bool getDateDiff, bool addNow)
-        //{
-        //    string disp = "";
+    ///// <summary>
+    ///// Summe | Datums-Differenz in Tagen
+    ///// </summary>
+    ///// <returns></returns>
+    //public string GetCellSumOrDateDiff(DataGridViewSelectedCellCollection selectedCells, bool getDateDiff, bool addNow)
+    //{
+    //    string disp = "";
 
-        //    //DataGridViewSelectedCellCollection selectedCells = _selectedCells;
-        //    if (selectedCells.Count == 0)
-        //    {
-        //        return disp;
-        //    }
-        //    if (selectedCells[0].ColumnIndex == 0)
-        //    {
-        //        return disp;
-        //    }
-        //    disp = "" + selectedCells.Count.ToString() + " Selected: ";
+    //    //DataGridViewSelectedCellCollection selectedCells = _selectedCells;
+    //    if (selectedCells.Count == 0)
+    //    {
+    //        return disp;
+    //    }
+    //    if (selectedCells[0].ColumnIndex == 0)
+    //    {
+    //        return disp;
+    //    }
+    //    disp = "" + selectedCells.Count.ToString() + " Selected: ";
 
-        //    if (getDateDiff)
-        //    {
-        //        // wenn 2 Datum(0,1) + now -> Datums-Differenz in Tagen
-        //        // wenn 1 Datum(0) + now
-        //        if (selectedCells.Count >= 1)
-        //        {
-        //            DateTime dt1;
-        //            DateTime dt2;
-        //            DateTime dtx;
-        //            SortedSet<DateTime> ts = new SortedSet<DateTime>();
+    //    if (getDateDiff)
+    //    {
+    //        // wenn 2 Datum(0,1) + now -> Datums-Differenz in Tagen
+    //        // wenn 1 Datum(0) + now
+    //        if (selectedCells.Count >= 1)
+    //        {
+    //            DateTime dt1;
+    //            DateTime dt2;
+    //            DateTime dtx;
+    //            SortedSet<DateTime> ts = new SortedSet<DateTime>();
 
-        //            var value = selectedCells[0].Value;
-        //            string valueString = "";
-        //            if (value != null)
-        //            {
-        //                valueString = value.ToString();
-        //            }
-        //            if (DateTime.TryParse(valueString, out dtx)){
-        //                ts.Add(dtx);// 1.
-        //                dt2 = dtx;
+    //            var value = selectedCells[0].Value;
+    //            string valueString = "";
+    //            if (value != null)
+    //            {
+    //                valueString = value.ToString();
+    //            }
+    //            if (DateTime.TryParse(valueString, out dtx)){
+    //                ts.Add(dtx);// 1.
+    //                dt2 = dtx;
 
-        //                //if (selectedCells.Count>=3) {
-        //                //    // Debug
-        //                //    var debug = true;
-        //                //}
+    //                //if (selectedCells.Count>=3) {
+    //                //    // Debug
+    //                //    var debug = true;
+    //                //}
 
-        //                for (int i = 0; i < selectedCells.Count; i++)
-        //                {
-        //                    value = selectedCells[i].Value;
-        //                    valueString = "";
-        //                    if (value != null)
-        //                    {
-        //                        valueString = value.ToString();
-        //                    }
-        //                    if (DateTime.TryParse(valueString, out dtx))
-        //                    {
-        //                        ts.Add(dtx);    // 2...n
-        //                    }
-        //                }
+    //                for (int i = 0; i < selectedCells.Count; i++)
+    //                {
+    //                    value = selectedCells[i].Value;
+    //                    valueString = "";
+    //                    if (value != null)
+    //                    {
+    //                        valueString = value.ToString();
+    //                    }
+    //                    if (DateTime.TryParse(valueString, out dtx))
+    //                    {
+    //                        ts.Add(dtx);    // 2...n
+    //                    }
+    //                }
 
-        //                if (addNow) {
-        //                    dtx = DateTime.Now.Date;
-        //                    ts.Add(dtx);    // n+1
-        //                }
+    //                if (addNow) {
+    //                    dtx = DateTime.Now.Date;
+    //                    ts.Add(dtx);    // n+1
+    //                }
 
-        //                //...
-        //                //}
+    //                //...
+    //                //}
 
-        //                ////-------------------------------------------------
-        //                ////var value = selectedCells[0].Value;
-        //                ////string valueString = "";
-        //                //if (value != null)
-        //                //{
-        //                //    valueString = value.ToString();
-        //                //}
+    //                ////-------------------------------------------------
+    //                ////var value = selectedCells[0].Value;
+    //                ////string valueString = "";
+    //                //if (value != null)
+    //                //{
+    //                //    valueString = value.ToString();
+    //                //}
 
-        //                //DateTime dt1;
-        //                //DateTime dt2;
-        //                //DateTime dtx;
-        //                ////Convert.ToDateTime(value)
-        //                //if (DateTime.TryParse(valueString, out dt1))
-        //                //{
-        //                //value = selectedCells[1].Value;
-        //                //valueString = "";
-        //                //if (value != null)
-        //                //{
-        //                //    valueString = value.ToString();
-        //                //}
-        //                //if (DateTime.TryParse(valueString, out dt2))
-        //                //{
-        //                //SortedSet<DateTime> ts = new SortedSet<DateTime>();
-        //                //ts.Add(dt1);
-        //                //ts.Add(dt2);
+    //                //DateTime dt1;
+    //                //DateTime dt2;
+    //                //DateTime dtx;
+    //                ////Convert.ToDateTime(value)
+    //                //if (DateTime.TryParse(valueString, out dt1))
+    //                //{
+    //                //value = selectedCells[1].Value;
+    //                //valueString = "";
+    //                //if (value != null)
+    //                //{
+    //                //    valueString = value.ToString();
+    //                //}
+    //                //if (DateTime.TryParse(valueString, out dt2))
+    //                //{
+    //                //SortedSet<DateTime> ts = new SortedSet<DateTime>();
+    //                //ts.Add(dt1);
+    //                //ts.Add(dt2);
 
-        //                //if (selectedCells.Count >= 3)
-        //                //{
-        //                //    for (int i = 0; i < selectedCells.Count; i++)
-        //                //    {
-        //                //        value = selectedCells[i].Value;
-        //                //        valueString = "";
-        //                //        if (value != null)
-        //                //        {
-        //                //            valueString = value.ToString();
-        //                //        }
-        //                //        if (DateTime.TryParse(valueString, out dtx))
-        //                //        {
-        //                //            ts.Add(dtx);
-        //                //        }
-        //                //    }
-        //                //}
+    //                //if (selectedCells.Count >= 3)
+    //                //{
+    //                //    for (int i = 0; i < selectedCells.Count; i++)
+    //                //    {
+    //                //        value = selectedCells[i].Value;
+    //                //        valueString = "";
+    //                //        if (value != null)
+    //                //        {
+    //                //            valueString = value.ToString();
+    //                //        }
+    //                //        if (DateTime.TryParse(valueString, out dtx))
+    //                //        {
+    //                //            ts.Add(dtx);
+    //                //        }
+    //                //    }
+    //                //}
 
-        //                //dt2 = DateTime.Now.Date;
-        //                //ts.Add(dt2);
+    //                //dt2 = DateTime.Now.Date;
+    //                //ts.Add(dt2);
 
-        //                // 0      1        2
-        //                // 1.1. - 10.1   - 20.1.
-        //                // 2      2->1 2   2->1 2
-        //                int count = 0;
-        //                foreach (var item in ts)
-        //                {
-        //                    if (count == 0)
-        //                    {
-        //                        disp = disp + " " + item.ToString("dd.MM.yyyy");
-        //                        dt2 = item;
-        //                    }
-        //                    else
-        //                    {
-        //                        dt1 = dt2;
-        //                        dt2 = item;
+    //                // 0      1        2
+    //                // 1.1. - 10.1   - 20.1.
+    //                // 2      2->1 2   2->1 2
+    //                int count = 0;
+    //                foreach (var item in ts)
+    //                {
+    //                    if (count == 0)
+    //                    {
+    //                        disp = disp + " " + item.ToString("dd.MM.yyyy");
+    //                        dt2 = item;
+    //                    }
+    //                    else
+    //                    {
+    //                        dt1 = dt2;
+    //                        dt2 = item;
 
-        //                        double numberOfDays = (dt2 - dt1).TotalDays;
-        //                        disp = disp + " - " + numberOfDays.ToString() + " - ";
-        //                        disp = disp + " " + item.ToString("dd.MM.yyyy");
-        //                    }
+    //                        double numberOfDays = (dt2 - dt1).TotalDays;
+    //                        disp = disp + " - " + numberOfDays.ToString() + " - ";
+    //                        disp = disp + " " + item.ToString("dd.MM.yyyy");
+    //                    }
 
-        //                    count++;
-        //                }
+    //                    count++;
+    //                }
 
-        //                return disp;
-        //            }
-        //        }
-        //    }
+    //                return disp;
+    //            }
+    //        }
+    //    }
 
-        //    decimal sum = 0;
-        //    for (int i = 0; i < selectedCells.Count; i++)
-        //    {
-        //        var value = selectedCells[i].Value;
+    //    decimal sum = 0;
+    //    for (int i = 0; i < selectedCells.Count; i++)
+    //    {
+    //        var value = selectedCells[i].Value;
 
-        //        //decimal.TryParse()
-        //        decimal betr = 0;
-        //        try
-        //        {
-        //            betr = Convert.ToDecimal(value);
-        //            sum = sum + betr;
-        //        }
-        //        catch (Exception)
-        //        {
-        //        }
-        //    }
+    //        //decimal.TryParse()
+    //        decimal betr = 0;
+    //        try
+    //        {
+    //            betr = Convert.ToDecimal(value);
+    //            sum = sum + betr;
+    //        }
+    //        catch (Exception)
+    //        {
+    //        }
+    //    }
 
-        //    disp = disp + " " + sum.ToString("#,##0.00");
+    //    disp = disp + " " + sum.ToString("#,##0.00");
 
-        //    return disp;
-        //}
+    //    return disp;
+    //}
     //}
 }

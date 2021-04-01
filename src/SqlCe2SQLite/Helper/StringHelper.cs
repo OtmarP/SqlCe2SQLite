@@ -23,7 +23,7 @@ namespace KaJourHelper
             //ret = "";
             ret = number.ToString();
             string n = new string('0', length);
-           //ret = "0000000000000000000000000000000000000000000000000000" + ret;
+            //ret = "0000000000000000000000000000000000000000000000000000" + ret;
             ret = n + ret;
             //ret = string.right(ret, length);
             ret = ret.Substring(ret.Length - length, length);
@@ -61,7 +61,8 @@ namespace KaJourHelper
         /// <param name="delimiter"></param>
         /// <param name="str2"></param>
         /// <returns></returns>
-        public static string StrAdd(string str1, string delimiter, string str2) {
+        public static string StrAdd(string str1, string delimiter, string str2)
+        {
             string ret = "";
 
             if (str1 == null) { str1 = ""; }
@@ -76,12 +77,14 @@ namespace KaJourHelper
                     // B -> A B
                     ret = str1 + delimiter + str2;
                 }
-                else {
+                else
+                {
                     //"" -> A
                     ret = str1;
                 }
             }
-            else {
+            else
+            {
                 // "" -> B
                 ret = str2;
             }
@@ -94,7 +97,8 @@ namespace KaJourHelper
         /// </summary>
         /// <param name="txt"></param>
         /// <returns></returns>
-        public static int Asc(string txt){
+        public static int Asc(string txt)
+        {
             int ret = 0;
 
             // https://www.itlnet.net/programming/program/Reference/c53g01c/ngd56f.html
@@ -194,7 +198,8 @@ namespace KaJourHelper
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        public static string DateToString_DE_DE(DateTime date){
+        public static string DateToString_DE_DE(DateTime date)
+        {
             string ret;
 
             var culture = System.Globalization.CultureInfo.GetCultureInfo("de-DE");
@@ -225,7 +230,8 @@ namespace KaJourHelper
         /// </summary>
         /// <param name="date">Datum</param>
         /// <returns></returns>
-        public static string DateGetWeekDayString(DateTime date){
+        public static string DateGetWeekDayString(DateTime date)
+        {
             string ret;
 
             var culture = System.Globalization.CultureInfo.GetCultureInfo("de-DE");
@@ -240,7 +246,8 @@ namespace KaJourHelper
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        public static int DateGetQuarter(DateTime date){
+        public static int DateGetQuarter(DateTime date)
+        {
             int ret;
 
             ret = (date.Month + 2) / 3;
@@ -253,7 +260,8 @@ namespace KaJourHelper
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
-        public static int DateGetWeekOfYear(DateTime date){
+        public static int DateGetWeekOfYear(DateTime date)
+        {
             int ret;
 
             var culture = System.Globalization.CultureInfo.GetCultureInfo("de-DE");
@@ -308,7 +316,8 @@ namespace KaJourHelper
         {
             decimal ret = 0;
 
-            if (number!=null) {
+            if (number != null)
+            {
                 //var culture = System.Globalization.CultureInfo.GetCultureInfo("de-DE");
                 //number = number.Replace('.', ',');
                 number = number.Replace(',', '.');
@@ -318,9 +327,9 @@ namespace KaJourHelper
                     {
                         ret = Convert.ToDecimal(number, System.Globalization.CultureInfo.InvariantCulture);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        //
+                        // ex
                     }
                 }
             }
@@ -421,7 +430,7 @@ namespace KaJourHelper
             // 32 ... 10
 
             int v1 = number / 32;
-            int vRest= number % 32;
+            int vRest = number % 32;
 
             string s0 = IntToBase32(vRest);
             string s1 = IntToBase32(v1);
@@ -436,11 +445,12 @@ namespace KaJourHelper
         /// </summary>
         /// <param name="number">Nummer</param>
         /// <returns></returns>
-        public static string IntToBase32(int number){
+        public static string IntToBase32(int number)
+        {
             string ret = "0";
 
             if (number == 0) { ret = "0"; }
-            else if(number == 1){ ret = "1"; }
+            else if (number == 1) { ret = "1"; }
             else if (number == 2) { ret = "2"; }
             else if (number == 3) { ret = "3"; }
             else if (number == 4) { ret = "4"; }
@@ -483,7 +493,8 @@ namespace KaJourHelper
         /// <param name="value">Zu rundender Wert</param>
         /// <param name="dec">Anzahl der Nachkommastellen</param>
         /// <returns>Gerundeter Wert</returns>
-        public static decimal CommercialRound(decimal value, int dec){
+        public static decimal CommercialRound(decimal value, int dec)
+        {
             // https://dotnet-snippets.de/snippet/kaufmaennisches-runden-in-decimal/303
 
             //3,6 = Math.Round(Convert.ToDecimal("3,64"),1,MidpointRounding.AwayFromZero));

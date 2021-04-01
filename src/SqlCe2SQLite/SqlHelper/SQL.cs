@@ -381,7 +381,7 @@ namespace KaJourDAL
         // ******************
 
         /// <summary>
-        /// 
+        /// "SELECT [TOP #] * FROM <Table> ORDER BY XY [LIMIT #] "
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="select">"SELECT "</param>
@@ -425,6 +425,11 @@ namespace KaJourDAL
             return ret;
         }
 
+        /// <summary>
+        /// "INSERT [INTO] <Table> "
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
         public string InsertBuilder(string tableName)
         {
             string ret = "INSERT " + tableName + " ";
