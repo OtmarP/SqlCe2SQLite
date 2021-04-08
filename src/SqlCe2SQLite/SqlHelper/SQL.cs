@@ -172,7 +172,7 @@ namespace KaJourDAL
                 else if (_SqlType == SQLProvider.SQLITE)
                 {
                     var ret = _SqliteConn.Database; // "main"
-                    ret += ", "+ _SqliteConn.FileName;
+                    ret += ", " + _SqliteConn.FileName;
                     return ret;
                 }
                 else
@@ -397,7 +397,8 @@ namespace KaJourDAL
             ret = string.Format(sql, tableName);
 
             string topRecords = " TOP " + maxRecords.ToString() + " ";
-            if (maxRecords==-1) {
+            if (maxRecords == -1)
+            {
                 topRecords = " ";
             }
 
@@ -406,7 +407,8 @@ namespace KaJourDAL
                 // SELECT TOP # * FROM...
                 ret = select + topRecords + ret;
             }
-            else if (_SqlType == SQLProvider.MSSQL) {
+            else if (_SqlType == SQLProvider.MSSQL)
+            {
                 // SELECT TOP # * FROM...
                 ret = select + topRecords + ret;
             }
@@ -435,7 +437,8 @@ namespace KaJourDAL
             string ret = "INSERT " + tableName + " ";
             // @"INSERT {0}"
 
-            if (_SqlType == SQLProvider.SQLITE){
+            if (_SqlType == SQLProvider.SQLITE)
+            {
                 // INSERT INTO JOUT__LWU_OP
                 ret = "INSERT INTO " + tableName + " ";
             }
@@ -515,7 +518,8 @@ namespace KaJourDAL
         /// GetDBInfo , needs: sql.Connect(); 
         /// </summary>
         /// <returns></returns>
-        public List<Tuple<string, string>> GetDBInfo(){
+        public List<Tuple<string, string>> GetDBInfo()
+        {
             List<Tuple<string, string>> tuples = new List<Tuple<string, string>>();
 
             if (_SqlType == SQLProvider.SQLCE)
@@ -536,7 +540,7 @@ namespace KaJourDAL
             {
                 throw new NotImplementedException();
             }
-            else if(_SqlType == SQLProvider.SQLITE)
+            else if (_SqlType == SQLProvider.SQLITE)
             {
                 //var dbInfo = _SqliteConn.GetDatabaseInfo();
 
@@ -718,13 +722,13 @@ namespace KaJourDAL
             // RepairOption option
             bool ret = false;
 
-            RepairOption option;
-            option = (RepairOption)ceoption;
-
             _SqlException = null;
 
             if (_SqlType == SQLProvider.SQLCE)
             {
+                RepairOption option;
+                option = (RepairOption)ceoption;
+
                 try
                 {
                     SqlCeEngine sqlCeEngine = new SqlCeEngine(sqlConnStr);
@@ -769,7 +773,8 @@ namespace KaJourDAL
                 {
                     //olCERS = olCECmd.ExecuteReader();
                     int RA = sql.ExecuteNonQuery("Repair", sSqlStr);
-                    if (RA == -1) {
+                    if (RA == -1)
+                    {
                         ret = true;
                     }
                 }
@@ -796,7 +801,8 @@ namespace KaJourDAL
 
             _SqlException = null;
 
-            if (_SqlType == SQLProvider.SQLCE){
+            if (_SqlType == SQLProvider.SQLCE)
+            {
                 try
                 {
                     SqlCeEngine sqlCeEngine = new SqlCeEngine(sqlConnStr);
@@ -833,7 +839,7 @@ namespace KaJourDAL
                         ret = true;
                     }
                 }
-                catch (Exception ex )
+                catch (Exception ex)
                 {
                     this.Log("Shrink", sqlConnStr, "", null, ex);
 
@@ -848,18 +854,20 @@ namespace KaJourDAL
             return ret;
         }
 
-        public bool Verify(/*string sqlProvider,*/ string sqlConnStr, SQLCE_VerifyOption ceoption) {
+        public bool Verify(/*string sqlProvider,*/ string sqlConnStr, SQLCE_VerifyOption ceoption)
+        {
             // string sqlProvider, string sqlConnStr
 
             // VerifyOption option
             bool ret = false;
 
-            VerifyOption option;
-            option = (VerifyOption)ceoption;
-
             _SqlException = null;
 
-            if (_SqlType == SQLProvider.SQLCE){
+            if (_SqlType == SQLProvider.SQLCE)
+            {
+                VerifyOption option;
+                option = (VerifyOption)ceoption;
+
                 try
                 {
                     SqlCeEngine sqlCeEngine = new SqlCeEngine(sqlConnStr);
@@ -1022,7 +1030,8 @@ namespace KaJourDAL
             return oDT;
         }
 
-        public System.Data.DataTable GetColumnListSimple(string spTableName){
+        public System.Data.DataTable GetColumnListSimple(string spTableName)
+        {
             System.Data.DataTable oDT;
             string sSqlStr;
 
@@ -1037,7 +1046,8 @@ namespace KaJourDAL
 
             oDS.Tables.Add(oDT);
 
-            if (_SqlType == SQLProvider.SQLCE){
+            if (_SqlType == SQLProvider.SQLCE)
+            {
                 System.Data.SqlServerCe.SqlCeCommand olCECmd;
                 System.Data.SqlServerCe.SqlCeDataReader olCERS;
 
@@ -1084,7 +1094,8 @@ namespace KaJourDAL
                 sSqlStr = sSqlStr + " , NUMERIC_PRECISION ";
                 sSqlStr = sSqlStr + " , NUMERIC_SCALE ";
                 sSqlStr = sSqlStr + " FROM INFORMATION_SCHEMA.COLUMNS ";
-                if (spTableName != ""){
+                if (spTableName != "")
+                {
                     // bpExact
                     sSqlStr = sSqlStr + " WHERE TABLE_NAME = '" + spTableName + "' ";
 
@@ -1116,15 +1127,16 @@ namespace KaJourDAL
                         }
                         string IS_NULLABLE = olCERS[4].ToString();
                         int CHARACTER_MAXIMUM_LENGTH = -1;
-                        if (olCERS[5]!=System.DBNull.Value) {
+                        if (olCERS[5] != System.DBNull.Value)
+                        {
                             CHARACTER_MAXIMUM_LENGTH = (int)olCERS[5];
                         }
-                        short NUMERIC_PRECISION =-1;
+                        short NUMERIC_PRECISION = -1;
                         if (olCERS[6] != System.DBNull.Value)
                         {
                             NUMERIC_PRECISION = (short)olCERS[6];
                         }
-                        short NUMERIC_SCALE =-1;
+                        short NUMERIC_SCALE = -1;
                         if (olCERS[7] != System.DBNull.Value)
                         {
                             NUMERIC_SCALE = (short)olCERS[7];
@@ -1133,20 +1145,22 @@ namespace KaJourDAL
                         int cid = ORDINAL_POSITION - 1;
                         string name = COLUMN_NAME;
                         string type = DATA_TYPE;
-                        if (DATA_TYPE == "nvarchar") {
+                        if (DATA_TYPE == "nvarchar")
+                        {
                             type += "(" + CHARACTER_MAXIMUM_LENGTH.ToString() + ")";
                         }
-                        if (DATA_TYPE == "numeric") {
-                            type += "("+ NUMERIC_PRECISION.ToString() +","+ NUMERIC_SCALE.ToString() + ")";
+                        if (DATA_TYPE == "numeric")
+                        {
+                            type += "(" + NUMERIC_PRECISION.ToString() + "," + NUMERIC_SCALE.ToString() + ")";
                         }
                         int notnull = 0;
                         // YES ... 0
                         // NO .... 1
-                        if (IS_NULLABLE== "NO") { notnull = 1; }
+                        if (IS_NULLABLE == "NO") { notnull = 1; }
                         string dflt_value = COLUMN_DEFAULT;
                         int pk = 0;
 
-                        oDT.Rows.Add(cid, name, type, notnull, dflt_value,pk);
+                        oDT.Rows.Add(cid, name, type, notnull, dflt_value, pk);
                     }
 
                     olCERS.Close();
@@ -1162,7 +1176,8 @@ namespace KaJourDAL
             {
                 throw new NotImplementedException();
             }
-            else if (_SqlType == SQLProvider.SQLITE){
+            else if (_SqlType == SQLProvider.SQLITE)
+            {
                 //PRAGMA table_info('table_name')
                 System.Data.SQLite.SQLiteCommand olCECmd;
                 System.Data.SQLite.SQLiteDataReader olCERS;
@@ -1226,7 +1241,8 @@ namespace KaJourDAL
 
             oDS.Tables.Add(oDT);
 
-            if (_SqlType == SQLProvider.SQLCE){
+            if (_SqlType == SQLProvider.SQLCE)
+            {
                 // SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='adatcjou' ORDER BY ORDINAL_POSITION
                 System.Data.SqlServerCe.SqlCeCommand olCECmd;
                 System.Data.SqlServerCe.SqlCeDataReader olCERS;
@@ -1239,36 +1255,36 @@ namespace KaJourDAL
                 // JOUT_BDD__OP DEL         3                0                 NULL           122          YES         int       NULL                     NULL                   10                NULL          NULL
 
                 // SQLCE
-// TABLE_NAME   COLUMN_NAME ORDINAL_POSITION COLUMN_HASDEFAULT COLUMN_DEFAULT COLUMN_FLAGS IS_NULLABLE DATA_TYPE CHARACTER_MAXIMUM_LENGTH CHARACTER_OCTET_LENGTH NUMERIC_PRECISION NUMERIC_SCALE DATETIME_PRECISION
-// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// JOUT_SDD__OP PMANDNR     1                0                 NULL           106          YES         nvarchar  7                        14                     NULL              NULL          NULL
-// JOUT_SDD__OP PCODE       2                0                 NULL           106          YES         nvarchar  3                        6                      NULL              NULL          NULL
-// JOUT_SDD__OP PICODE      3                0                 NULL           106          YES         nvarchar  1                        2                      NULL              NULL          NULL
-// JOUT_SDD__OP PTEXT       4                0                 NULL           106          YES         nvarchar  30                       60                     NULL              NULL          NULL
-// JOUT_SDD__OP PLW         5                0                 NULL           122          YES         int       NULL                     NULL                   10                NULL          NULL
-// JOUT_SDD__OP PBETRAG     6                0                 NULL           122          YES         numeric   NULL                     NULL                   18                2             NULL
-// JOUT_SDD__OP PSOLL       7                0                 NULL           106          YES         nvarchar  7                        14                     NULL              NULL          NULL
-// JOUT_SDD__OP PHABEN      8                0                 NULL           106          YES         nvarchar  7                        14                     NULL              NULL          NULL
-// JOUT_SDD__OP PFELD       9                0                 NULL           122          YES         int       NULL                     NULL                   10                NULL          NULL
-// JOUT_SDD__OP DEL         10               0                 NULL           122          YES         int       NULL                     NULL                   10                NULL          NULL
-// ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                // TABLE_NAME   COLUMN_NAME ORDINAL_POSITION COLUMN_HASDEFAULT COLUMN_DEFAULT COLUMN_FLAGS IS_NULLABLE DATA_TYPE CHARACTER_MAXIMUM_LENGTH CHARACTER_OCTET_LENGTH NUMERIC_PRECISION NUMERIC_SCALE DATETIME_PRECISION
+                // ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                // JOUT_SDD__OP PMANDNR     1                0                 NULL           106          YES         nvarchar  7                        14                     NULL              NULL          NULL
+                // JOUT_SDD__OP PCODE       2                0                 NULL           106          YES         nvarchar  3                        6                      NULL              NULL          NULL
+                // JOUT_SDD__OP PICODE      3                0                 NULL           106          YES         nvarchar  1                        2                      NULL              NULL          NULL
+                // JOUT_SDD__OP PTEXT       4                0                 NULL           106          YES         nvarchar  30                       60                     NULL              NULL          NULL
+                // JOUT_SDD__OP PLW         5                0                 NULL           122          YES         int       NULL                     NULL                   10                NULL          NULL
+                // JOUT_SDD__OP PBETRAG     6                0                 NULL           122          YES         numeric   NULL                     NULL                   18                2             NULL
+                // JOUT_SDD__OP PSOLL       7                0                 NULL           106          YES         nvarchar  7                        14                     NULL              NULL          NULL
+                // JOUT_SDD__OP PHABEN      8                0                 NULL           106          YES         nvarchar  7                        14                     NULL              NULL          NULL
+                // JOUT_SDD__OP PFELD       9                0                 NULL           122          YES         int       NULL                     NULL                   10                NULL          NULL
+                // JOUT_SDD__OP DEL         10               0                 NULL           122          YES         int       NULL                     NULL                   10                NULL          NULL
+                // ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                 // SQLCE - Convert
-// TABLE_NAME   COLUMN_NAME ORDINAL_POSITION COLUMN_HASDEFAULT COLUMN_DEFAULT COLUMN_FLAGS IS_NULLABLE DATA_TYPE CHARACTER_MAXIMUM_LENGTH CHARACTER_OCTET_LENGTH NUMERIC_PRECISION NUMERIC_SCALE DATETIME_PRECISION
-// ORDINAL_POSITION-1 COLUMN_NAME DATA_TYPE(CHARACTER_MAXIMUM_LENGTH)        IS_NULLABLE pk
-//                                         (NUMERIC_PRECISION,NUMERIC_SCALE) YES-0 No-1
-// ----------------------------------------------------------------------------------------
-// 0                  PMANDNR     nvarchar(7)                                0           .
-// 1                  PCODE       nvarchar(3)                                0           .
-// 2                  PICODE      nvarchar(1)                                0           .
-// 3                  PTEXT       nvarchar(30)                               0           .
-// 4                  PLW         int                                        0           .
-// 5                  PBETRAG     numeric(18,2)                              0           .
-// 6                  PSOLL       nvarchar(7)                                0           .
-// 7                  PHABEN      nvarchar(7)                                0           .
-// 8                  PFELD       int                                        0           .
-// 9                  DEL         int                                        0           .
-// ----------------------------------------------------------------------------------------
+                // TABLE_NAME   COLUMN_NAME ORDINAL_POSITION COLUMN_HASDEFAULT COLUMN_DEFAULT COLUMN_FLAGS IS_NULLABLE DATA_TYPE CHARACTER_MAXIMUM_LENGTH CHARACTER_OCTET_LENGTH NUMERIC_PRECISION NUMERIC_SCALE DATETIME_PRECISION
+                // ORDINAL_POSITION-1 COLUMN_NAME DATA_TYPE(CHARACTER_MAXIMUM_LENGTH)        IS_NULLABLE pk
+                //                                         (NUMERIC_PRECISION,NUMERIC_SCALE) YES-0 No-1
+                // ----------------------------------------------------------------------------------------
+                // 0                  PMANDNR     nvarchar(7)                                0           .
+                // 1                  PCODE       nvarchar(3)                                0           .
+                // 2                  PICODE      nvarchar(1)                                0           .
+                // 3                  PTEXT       nvarchar(30)                               0           .
+                // 4                  PLW         int                                        0           .
+                // 5                  PBETRAG     numeric(18,2)                              0           .
+                // 6                  PSOLL       nvarchar(7)                                0           .
+                // 7                  PHABEN      nvarchar(7)                                0           .
+                // 8                  PFELD       int                                        0           .
+                // 9                  DEL         int                                        0           .
+                // ----------------------------------------------------------------------------------------
 
 
                 // TABLE_CATALOG TABLE_SCHEMA TABLE_NAME COLUMN_NAME
@@ -1308,12 +1324,14 @@ namespace KaJourDAL
                 sSqlStr = sSqlStr + " , NUMERIC_SCALE ";   // Error bei oDT.Load(olCERS)
                 sSqlStr = sSqlStr + " , DATETIME_PRECISION ";   // Error bei oDT.Load(olCERS)
                 sSqlStr = sSqlStr + " FROM INFORMATION_SCHEMA.COLUMNS ";
-                if (spTableName != ""){
+                if (spTableName != "")
+                {
                     if (bpExact)
                     {
                         sSqlStr = sSqlStr + " WHERE TABLE_NAME = '" + spTableName + "' ";
                     }
-                    else {
+                    else
+                    {
                         sSqlStr = sSqlStr + " WHERE TABLE_NAME like '" + spTableName + "' ";
                     }
                 }
@@ -1525,7 +1543,8 @@ namespace KaJourDAL
             var index = this.GetTableIndexExists(/*sqlProvider, sqlConnStr,*/tableName, indexName);
             this.DisConnect();
             // -1 Error
-            if (index>0) {
+            if (index > 0)
+            {
                 ret = true;
             }
 
@@ -1543,7 +1562,7 @@ namespace KaJourDAL
                 // SELECT * FROM INFORMATION_SCHEMA.INDEXES where TABLE_NAME='JOUT_JDD__OP' and INDEX_NAME='JOUI_JD1__OP'
                 // für jedes Feld ein Record
 
-                string sqlCmd = 
+                string sqlCmd =
 @"SELECT TABLE_NAME, INDEX_NAME FROM INFORMATION_SCHEMA.INDEXES 
 WHERE TABLE_NAME=@TABLE_NAME AND INDEX_NAME=@INDEX_NAME";
 
@@ -1560,7 +1579,8 @@ WHERE TABLE_NAME=@TABLE_NAME AND INDEX_NAME=@INDEX_NAME";
                     {
                         indexExists = 1;
                     }
-                    else {
+                    else
+                    {
                         indexExists = 0;
                     }
 
@@ -1599,7 +1619,8 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                     {
                         indexExists = 1;
                     }
-                    else {
+                    else
+                    {
                         indexExists = 0;
                     }
 
@@ -1626,7 +1647,8 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
         /// <param name="tableName"></param>
         /// <param name="indexName"></param>
         /// <returns>-1,0,1,2,3,4</returns>
-        public int DropIndex(/*string sqlProvider, string sqlConnStr,*/ string tableName, string indexName) {
+        public int DropIndex(/*string sqlProvider, string sqlConnStr,*/ string tableName, string indexName)
+        {
             int ret = -1;
 
             // DROP INDEX [TableName].IndexName
@@ -1667,7 +1689,8 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                 try
                 {
                     int RA = sql.ExecuteNonQuery("DropIndex", sqlCmd);
-                    if (RA==0) {
+                    if (RA == 0)
+                    {
                         RA = -1;
                     }
                     ret = RA;
@@ -1705,7 +1728,8 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
 
             _SqlException = null;
 
-            if (_SqlType == SQLProvider.SQLCE){
+            if (_SqlType == SQLProvider.SQLCE)
+            {
                 string unique = "";
                 if (indexUnique == 1)
                 {
@@ -1729,7 +1753,8 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                     _SqlException = ex;
                 }
             }
-            else if (_SqlType == SQLProvider.MSSQL) {
+            else if (_SqlType == SQLProvider.MSSQL)
+            {
                 throw new NotImplementedException();
             }
             else if (_SqlType == SQLProvider.SQLITE)
@@ -1749,7 +1774,8 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                 {
                     int RA = sql.ExecuteNonQuery("CreateIndex", sqlCmd);
                     // 0 ... OK
-                    if (RA==0) {
+                    if (RA == 0)
+                    {
                         RA = -1;
                     }
                     ret = RA;
@@ -2013,7 +2039,8 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                     }
                 }
 
-                if (_LogInfo) {
+                if (_LogInfo)
+                {
                     // Info-Log
                     this.Log("ExecuteNonQuery", info, sql, parameters, null);
                 }
@@ -2042,14 +2069,16 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             {
                 System.Data.SQLite.SQLiteCommand olCECmd;
                 olCECmd = new System.Data.SQLite.SQLiteCommand(sql, _SqliteConn);
-                if (parameters != null){
+                if (parameters != null)
+                {
                     foreach (var item in parameters)
                     {
                         olCECmd.Parameters.AddWithValue(item.Key, item.Value);
                     }
                 }
 
-                if (_LogInfo) {
+                if (_LogInfo)
+                {
                     // Info-Log
                     this.Log("ExecuteNonQuery", info, sql, parameters, null);
                 }
@@ -2085,7 +2114,7 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
         {
             DataTable oDT;
 
-            oDT = Execute(info,sql, new Dictionary<string, object>());
+            oDT = Execute(info, sql, new Dictionary<string, object>());
 
             return oDT;
         }
@@ -2149,7 +2178,8 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                 }
                 olCECmd.CommandType = CommandType.Text;
 
-                if (_LogInfo) {
+                if (_LogInfo)
+                {
                     // Info-Log
                     this.Log("Execute", info, sql, parameters, null);
                 }
@@ -2198,7 +2228,8 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                 System.Data.SQLite.SQLiteDataReader olCERS;
 
                 olCECmd = new System.Data.SQLite.SQLiteCommand(sql, _SqliteConn);
-                if (parameters != null){
+                if (parameters != null)
+                {
                     foreach (var item in parameters)
                     {
                         olCECmd.Parameters.AddWithValue(item.Key, item.Value);
@@ -2206,7 +2237,8 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                 }
                 olCECmd.CommandType = CommandType.Text;
 
-                if (_LogInfo) {
+                if (_LogInfo)
+                {
                     // Info-Log
                     this.Log("Execute", info, sql, parameters, null);
                 }
@@ -2244,7 +2276,8 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             string dataTime = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss.fff");
 
             string line = command + ": Info:" + info + " Sql:" + sql;
-            if (ex!=null) {
+            if (ex != null)
+            {
                 line += " Error: " + ex.Message;
             }
             Console.WriteLine(line);
@@ -2265,10 +2298,11 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                 string line2 = "------------------ " + _SqlType.ToString() + " ------------------";
                 if (ex != null)
                 {
-                       line2 = "################## " + _SqlType.ToString() + " ##################";
+                    line2 = "################## " + _SqlType.ToString() + " ##################";
                 }
                 StringBuilder parList = new StringBuilder();
-                if (parameters != null) {
+                if (parameters != null)
+                {
                     parList.AppendFormat("Par: {0} ", parameters.Count);
 
                     foreach (var item in parameters)
