@@ -294,7 +294,7 @@ namespace KaJourHelper
         }
 
         /// <summary>
-        /// 12.34m -> "12.34"
+        /// 12.34m -> "12.34" (SQLite! 0->"0", 2.3->"2.3")
         /// </summary>
         /// <param name="number">Nummer</param>
         /// <returns></returns>
@@ -499,6 +499,17 @@ namespace KaJourHelper
 
             //3,6 = Math.Round(Convert.ToDecimal("3,64"),1,MidpointRounding.AwayFromZero));
             //3,7 = Math.Round(Convert.ToDecimal("3,65"),1,MidpointRounding.AwayFromZero));
+
+            if (dec == 1) { value = value + 0.0M; }
+            if (dec == 2) { value = value + 0.00M; }
+            if (dec == 3) { value = value + 0.000M; }
+            if (dec == 4) { value = value + 0.0000M; }
+            if (dec == 5) { value = value + 0.00000M; }
+            if (dec == 6) { value = value + 0.000000M; }
+            if (dec == 7) { value = value + 0.0000000M; }
+            if (dec == 8) { value = value + 0.00000000M; }
+            if (dec == 9) { value = value + 0.000000000M; }
+            if (dec == 10) { value = value+ 0.000000000000M; }
 
             decimal ret = Math.Round(value, dec, MidpointRounding.AwayFromZero);
 

@@ -57,6 +57,12 @@ namespace KaJourDAL
         // ******************
         // Constructor
         // ******************
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="sqlProvider"></param>
+        /// <param name="sqlConnStr"></param>
         public SQL(string sqlProvider, string sqlConnStr)
         {
             _SqlProvider = sqlProvider;
@@ -78,10 +84,16 @@ namespace KaJourDAL
         // ******************
         // Properties
         // ******************
+
+        /// <summary>
+        /// ConnectionString
+        /// </summary>
         public string ConnectionString
         {
             get
             {
+                // ToDo: Make Tests...
+
                 if (_SqlType == SQLProvider.SQLCE)
                 {
                     return _SqlCEConn.ConnectionString;
@@ -120,10 +132,15 @@ namespace KaJourDAL
             }
         }
 
+        /// <summary>
+        /// State (not Used !!!)
+        /// </summary>
         public System.Data.ConnectionState State
         {
             get
             {
+                // ToDo: Make Tests...
+
                 if (_SqlType == SQLProvider.SQLCE)
                 {
                     return _SqlCEConn.State;
@@ -256,6 +273,10 @@ namespace KaJourDAL
             }
         }
 
+        /// <summary>
+        /// GetAssemblyLocation
+        /// </summary>
+        /// <returns></returns>
         public string GetAssemblyLocation()
         {
             string fullPath = "";
@@ -480,8 +501,14 @@ namespace KaJourDAL
             return ret;
         }
 
+        /// <summary>
+        /// SetProviderFromGlobalString
+        /// </summary>
+        /// <param name="sqlProvider"></param>
         public void SetProviderFromGlobalString(string sqlProvider)
         {
+            // ToDo: Make Tests...
+
             //KaJourDAL.KaJour_Global.SQLProvider
 
             _SqlProvider = sqlProvider;
@@ -504,8 +531,14 @@ namespace KaJourDAL
             }
         }
 
+        /// <summary>
+        /// SetProvider
+        /// </summary>
+        /// <param name="sqlType"></param>
         public void SetProvider(SQLProvider sqlType)
         {
+            // ToDo: Make Tests...
+
             //if (sqlType == SQLProvider.MSSQL)
             //{
             //    var debug = 1;
@@ -662,6 +695,9 @@ namespace KaJourDAL
             ////return false;
         }
 
+        /// <summary>
+        /// DisConnect
+        /// </summary>
         public void DisConnect()
         {
             if (_SqlType == SQLProvider.SQLCE)
@@ -682,7 +718,10 @@ namespace KaJourDAL
             }
         }
 
-        // ToString()
+        /// <summary>
+        /// GetProviderType -> ToString()
+        /// </summary>
+        /// <returns>ToString()</returns>
         public string GetProviderType()
         {
             if (_SqlType == SQLProvider.SQLCE)
@@ -707,6 +746,10 @@ namespace KaJourDAL
             }
         }
 
+        /// <summary>
+        /// GetException
+        /// </summary>
+        /// <returns></returns>
         public System.Exception GetException()
         {
             return _SqlException;
@@ -715,6 +758,12 @@ namespace KaJourDAL
         //sqlCeEngine.Compact()
         //sqlCeEngine.Upgrade()
 
+        /// <summary>
+        /// Repair
+        /// </summary>
+        /// <param name="sqlConnStr"></param>
+        /// <param name="ceoption"></param>
+        /// <returns></returns>
         public bool Repair(/*string sqlProvider,*/ string sqlConnStr, SQLCE_RepairOption ceoption)
         {
             //string sqlProvider, string sqlConnStr
@@ -793,6 +842,11 @@ namespace KaJourDAL
             return ret;
         }
 
+        /// <summary>
+        /// Shrink
+        /// </summary>
+        /// <param name="sqlConnStr"></param>
+        /// <returns></returns>
         public bool Shrink(/*string sqlProvider,*/ string sqlConnStr)
         {
             // string sqlProvider, string sqlConnStr
@@ -854,6 +908,12 @@ namespace KaJourDAL
             return ret;
         }
 
+        /// <summary>
+        /// Verify
+        /// </summary>
+        /// <param name="sqlConnStr"></param>
+        /// <param name="ceoption"></param>
+        /// <returns></returns>
         public bool Verify(/*string sqlProvider,*/ string sqlConnStr, SQLCE_VerifyOption ceoption)
         {
             // string sqlProvider, string sqlConnStr
@@ -1030,6 +1090,11 @@ namespace KaJourDAL
             return oDT;
         }
 
+        /// <summary>
+        /// GetColumnListSimple , needs: sql.Connect();
+        /// </summary>
+        /// <param name="spTableName"></param>
+        /// <returns></returns>
         public System.Data.DataTable GetColumnListSimple(string spTableName)
         {
             System.Data.DataTable oDT;
@@ -1225,8 +1290,16 @@ namespace KaJourDAL
             return oDT;
         }
 
+        /// <summary>
+        /// GetColumnsListMSSQL (not Used !!!)
+        /// </summary>
+        /// <param name="spTableName"></param>
+        /// <param name="bpExact"></param>
+        /// <returns></returns>
         public System.Data.DataTable GetColumnsListMSSQL(string spTableName, bool bpExact)
         {
+            // ToDo: Make Tests...
+
             System.Data.DataTable oDT;
             string sSqlStr;
 
@@ -1413,6 +1486,11 @@ namespace KaJourDAL
             return oDT;
         }
 
+        /// <summary>
+        /// TableExists
+        /// </summary>
+        /// <param name="spTableName"></param>
+        /// <returns></returns>
         public bool TableExists(/*string sqlProvider, string sqlConnStr,*/ string spTableName)
         {
             bool ret = false;
@@ -1433,6 +1511,11 @@ namespace KaJourDAL
             return ret;
         }
 
+        /// <summary>
+        /// GetTableRecCount, needs: sql.Connect();
+        /// </summary>
+        /// <param name="spTableName"></param>
+        /// <returns></returns>
         public int GetTableRecCount(string spTableName)
         {
             int nRet;
@@ -1551,6 +1634,12 @@ namespace KaJourDAL
             return ret;
         }
 
+        /// <summary>
+        /// GetTableIndexExists
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="indexName"></param>
+        /// <returns></returns>
         public int GetTableIndexExists(/*string sqlProvider, string sqlConnStr,*/ string tableName, string indexName)
         {
             int indexExists = -1;
@@ -1805,12 +1894,19 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
         //    return parameters;
         //}
 
+        /// <summary>
+        /// InitParameterList
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, object> InitParameterList()
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             return parameters;
         }
 
+        /// <summary>
+        /// BeginTransaction (not Used !!!)
+        /// </summary>
         public void BeginTransaction()
         {
             if (_SqlType == SQLProvider.SQLCE)
@@ -1834,6 +1930,9 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             }
         }
 
+        /// <summary>
+        /// EndTransaction (not Used !!!)
+        /// </summary>
         public void EndTransaction()
         {
             if (_SqlType == SQLProvider.SQLCE)
@@ -1857,6 +1956,10 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             }
         }
 
+        /// <summary>
+        /// CreateCommand (not Used !!!)
+        /// </summary>
+        /// <param name="sqlCommand"></param>
         public void CreateCommand(string sqlCommand)
         {
             if (_SqlType == SQLProvider.SQLCE)
@@ -1881,6 +1984,10 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             }
         }
 
+        /// <summary>
+        /// AddParameters (not Used !!!)
+        /// </summary>
+        /// <param name="parameterList"></param>
         public void AddParameters(List<string> parameterList)
         {
             if (_SqlType == SQLProvider.SQLCE)
@@ -1915,6 +2022,10 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             }
         }
 
+        /// <summary>
+        /// SetParameters (not Used !!!)
+        /// </summary>
+        /// <param name="parameterList"></param>
         public void SetParameters(List<object> parameterList)
         {
             if (_SqlType == SQLProvider.SQLCE)
@@ -2271,6 +2382,14 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             return oDT;
         }
 
+        /// <summary>
+        /// Log
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="info"></param>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="ex"></param>
         public void Log(string command, string info, string sql, Dictionary<string, object> parameters, Exception ex)
         {
             string dataTime = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss.fff");
