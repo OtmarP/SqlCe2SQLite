@@ -2408,16 +2408,21 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
             //Trace.WriteLine("Error: " + ex.Message);
             //Trace.WriteLine("##############################################");
 
+            string flagDebugRelease = "Release";
 #if DEBUG
+            flagDebugRelease = "Debug";
+#endif
+
+//#if DEBUG
             var exeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string logFile = Path.Combine(exeDir, "Log.txt");
 
             using (StreamWriter sw = File.AppendText(logFile))
             {
-                string line2 = "------------------ " + _SqlType.ToString() + " ------------------";
+                string line2 = "------------------ " + _SqlType.ToString() + " ------------------ [" + flagDebugRelease + "]";
                 if (ex != null)
                 {
-                    line2 = "################## " + _SqlType.ToString() + " ##################";
+                    line2 = "################## " + _SqlType.ToString() + " ################## [" + flagDebugRelease + "]";
                 }
                 StringBuilder parList = new StringBuilder();
                 if (parameters != null)
@@ -2427,7 +2432,19 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                     foreach (var item in parameters)
                     {
                         StringBuilder p = new StringBuilder();
-                        p.AppendFormat("({0}='{1}')", item.Key, item.Value);
+
+                        if (item.Value == null)
+                        {
+                            p.AppendFormat("('{0}'='{1}')", item.Key, "<null>");
+                        }
+                        else if (item.Value== DBNull.Value) {
+                            //parameters.Add("@ARBEIT", DBNull.Value);
+                            p.AppendFormat("('{0}'='{1}')", item.Key, "<DBNull.Value>");
+                        }
+                        else
+                        {
+                            p.AppendFormat("('{0}'='{1}')", item.Key, item.Value);
+                        }
 
                         parList.Append(p);
                     }
@@ -2443,7 +2460,7 @@ WHERE type='index' and tbl_name=@TABLE_NAME COLLATE NOCASE AND name=@INDEX_NAME 
                 //sw.WriteLine(line2);    // ##############################################
                 sw.WriteLine("");
             }
-#endif
+//#endif
         }
 
         ///// <summary>
